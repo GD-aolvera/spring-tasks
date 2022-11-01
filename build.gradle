@@ -1,12 +1,18 @@
-plugins {
-	id 'org.springframework.boot' version '2.7.5'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-	id 'java'
+buildscript {
+	ext {
+		openApiVersion = "1.6.12"
+	}
 }
 
-group = 'com.gd'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+plugins {
+	id "org.springframework.boot" version "2.7.5"
+	id "io.spring.dependency-management" version "1.0.15.RELEASE"
+	id "java"
+}
+
+group = "com.gd"
+version = "0.0.1-SNAPSHOT"
+sourceCompatibility = "17"
 
 configurations {
 	compileOnly {
@@ -19,13 +25,13 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation("org.springdoc:springdoc-openapi-ui:1.6.12")
+	implementation "org.springframework.boot:spring-boot-starter-web"
+	compileOnly "org.projectlombok:lombok"
+	annotationProcessor "org.projectlombok:lombok"
+	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
 }
 
-tasks.named('test') {
+tasks.named("test") {
 	useJUnitPlatform()
 }
