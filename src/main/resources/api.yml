@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: Grid Dynamics Internship -  Name Management Test
+  description: |-
+    Testing API-First approach with swagger and open AI. Starting with previous description of the API in yaml and implementing in simple REST sample controller. The controller can add, edit, get and delete names from an ArrayList through Spring.
+  version: 0.0.1
+servers:
+  - url: localhost:8080
+tags:
+  - name: Names
+    description: Manage name list
+
+paths:
+  /names:
+    get:
+      tags:
+        - Names
+      summary: Get full name list
+      description: Returns a string representation of the array of names
+      operationId: getNameList
+      responses:
+        '200':
+          description: Names list fetched
+
+    post:
+      tags:
+        - Names
+      summary: Add a name to the list
+      description: Returns a string representation of the array of names
+      operationId: addName
+      parameters:
+        - name: name
+          in: query
+          description: Name to add to the list
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: John Doe
+      responses:
+        '200':
+          description: Name successfully added
+  /names/{index}:
+    put:
+      tags:
+        - Names
+      summary: Updates name at specified index with the one provided
+      description: ''
+      operationId: setName
+      parameters:
+        - name: index
+          in: path
+          description: Index of the name that should be replaced in list
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Name that will replace the one at the given index
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Name successfully replaced
+    delete:
+      tags:
+        - Names
+      summary: Deletes name at given index
+      description: ''
+      operationId: deleteName
+      parameters:
+        - name: index
+          in: path
+          description: Index of name to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Name successfully deleted
