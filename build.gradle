@@ -14,6 +14,7 @@ buildscript {
 plugins {
 	id "org.springframework.boot" version "2.7.5"
 	id "io.spring.dependency-management" version "1.0.15.RELEASE"
+	id "org.openapi.generator" version "5.0.0"
 	id "java"
 }
 
@@ -44,3 +45,15 @@ tasks.named("test") {
 }
 
 apply plugin: "org.openapi.generator"
+
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = "$rootDir/src/main/resources/api.yaml".toString()
+	outputDir = "$buildDir/generated".toString()
+	apiPackage = "com.gd.spring.api"
+	invokerPackage = "com.gd.spring"
+	modelPackage = "com.gd.spring.model"
+	configOptions = [
+			dateLibrary: "java8"
+	]
+}
