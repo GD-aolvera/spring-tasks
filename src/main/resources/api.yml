@@ -1,83 +1,266 @@
 openapi: 3.0.0
 info:
-  title: Grid Dynamics Internship -  Name Management Test
+  title: Grid Dynamics Internship -  Hospital Management
   description: |-
-    Testing API-First approach with swagger and open AI. Starting with previous description of the API in yaml and implementing in simple REST sample controller. The controller can add, edit, get and delete names from an ArrayList through Spring.
+    A simple application demo for hospital management created at the Java Grid Dynamics internship. The app uses Java 17, Spring boot, Gradle, Hibernate, Postgres + database migration tool (Liquibase), Lombok, Swagger.
   version: 0.0.1
 servers:
   - url: localhost:8080
 tags:
-  - name: Names
-    description: Manage name list
+  - name: Doctors
+    description: Available commands for doctors
+  - name: Nurses
+    description: Available commands for nurses
 
 paths:
-  /names:
-    get:
-      tags:
-        - Names
-      summary: Get full name list
-      description: Returns a string representation of the array of names
-      operationId: getNameList
-      responses:
-        '200':
-          description: Names list fetched
-
+  /patient/add:
     post:
       tags:
-        - Names
-      summary: Add a name to the list
-      description: Returns a string representation of the array of names
-      operationId: addName
-      parameters:
-        - name: name
-          in: query
-          description: Name to add to the list
-          required: false
-          explode: true
-          schema:
-            type: string
-            default: John Doe
+        - Doctors
+      summary: Add a patient
+      description: Adds provided patient to database
+      operationId: addPatient
+      requestBody:
+        description: Patient info to be added to the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
       responses:
         '200':
           description: Name successfully added
-  /names/{index}:
+  /patient/discharge/{insuranceNumber}:
+    delete:
+      tags:
+        - Doctors
+      summary: Discharge a patient by given insurance number
+      description: Deletes any prescriptions under the given insurance number, subsequently all related events.
+      operationId: dischargePatientByInsurance
+      parameters:
+        - name: insuranceNumber
+          in: path
+          description: The patient's insurance number found on Patients table.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Succesfully discharged patient
+  /prescription:
+    post:
+      tags:
+        - Doctors
+      summary: Prescribe procedures or medication
+      description: Prescription is for the patient
+      operationId: createPrescription
+      requestBody:
+        description: Created prescription object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Prescription'
+      responses:
+        '200':
+          description: Successfully added prescription
+  /prescription/delete/{prescriptionId}:
+    delete:
+      tags:
+        - Doctors
+      summary: Delete the given ID's prescription
+      description: ''
+      operationId: deletePrescriptionById
+      parameters:
+        - name: prescriptionId
+          in: path
+          description: The given prescription's ID in Prescriptions table
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Prescription succesfully removed
+  /events:
+    get:
+      tags:
+        - Doctors
+        - Nurses
+      summary: Get all events
+      description: ''
+      operationId: getAllEvents
+      responses:
+        '200':
+          description: All events sucessfully fetched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+  /events/{eventId}:
     put:
       tags:
-        - Names
-      summary: Updates name at specified index with the one provided
+        - Doctors
+      summary: Modify given event
       description: ''
-      operationId: setName
+      operationId: modifyEvent
       parameters:
-        - name: index
+        - name: eventId
           in: path
-          description: Index of the name that should be replaced in list
+          description: ID of the event that will be modified
           required: true
           schema:
             type: integer
             format: int64
       requestBody:
-        description: Name that will replace the one at the given index
+        description: Modified event that will replace the one with the given ID.
         content:
-          text/plain:
+          application/json:
             schema:
-              type: string
+              $ref: '#/components/schemas/Event'
       responses:
         '200':
-          description: Name successfully replaced
-    delete:
+          description: Succesfully updated event
+  /events/cancel/{eventId}:
+    put:
       tags:
-        - Names
-      summary: Deletes name at given index
+        - Doctors
+      summary: Cancel given event
       description: ''
-      operationId: deleteName
+      operationId: cancelEvent
       parameters:
-        - name: index
+        - name: eventId
           in: path
-          description: Index of name to delete
+          description: ID of the event that will be canceled
           required: true
           schema:
             type: integer
             format: int64
       responses:
         '200':
-          description: Name successfully deleted
+          description: Succesfully canceled events
+
+components:
+  schemas:
+    Patient:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 001
+        name:
+          type: string
+          description: Name of the patient
+          example: John Smith
+        diagnosis:
+          type: string
+          description: Patient's diagnosis
+          example: tuberculosis
+        insuranceNumber:
+          type: integer
+          format: int64
+          example: 002
+        doctorId:
+          type: integer
+          format: int64
+          description: doctor's id in doctor catalogue
+        status:
+          type: string
+          description: patient's treatment progress
+          example: In treatment
+          enum:
+            - In treatment
+            - recovered
+    Prescription:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 001
+        patientId:
+          type: integer
+          format: int64
+          example: 001
+          description: The patient's id in patients catalogue.
+        treatmentId:
+          type: integer
+          format: int64
+          example: 234
+          description: The prescribed treatment's unique id in catalogue.
+        timePattern:
+          type: string
+          description: Frequency of treatment
+          example: Once a day
+        period:
+          type: integer
+          format: int64
+          example: 5
+          description: Duration of the treatment in days
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 001
+          description: Unique event id
+        prescriptionId:
+          type: integer
+          format: int64
+          example: 023
+          description: Related precriptions's id in Prescriptions table
+        patientId:
+          type: integer
+          format: int64
+          example: 123
+          description: Realated pateint's id in Patient table
+        dateTime:
+          type: string
+          format: date-time
+          description: Scheduled date and time for the event.
+        status:
+          type: string
+          description: Current event status
+          example: Cancelled
+          enum:
+            - Scheduled
+            - Done
+            - Cancelled
+        cancelReason:
+          type: string
+          description: reason for cancelling the event
+          example: Doctor's orders
+        treatmentId:
+          type: integer
+          format: int64
+          example: 234
+          description: The prescribre treatment's unique id in catalogue.
+    Treatment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 001
+          description: Unique treatment identifier in catalogue
+        name:
+          type: string
+          example: Colonoscopy
+          description: Name of procedure/medicine
+        type:
+          type: string
+          description: Wether the treatment is a procedure or a medicine
+          example: Procedure
+          enum:
+            - Procedure
+            - Medicine
+  requestBodies:
+    Patient:
+      description: Patient object that will be added to the database
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Patient'
