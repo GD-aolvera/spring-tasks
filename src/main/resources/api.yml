@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Grid Dynamics Internship -  Hospital Management
   description: |-
-    A simple application demo for hospital management created at the Java Grid Dynamics internship. The app uses Java 17, Spring boot, Gradle, Hibernate, Postgres + database migration tool (Liquibase), Lombok, Swagger.
+    A simple application demo for hospital management created at the Grid Dynamics Java internship. The app uses Java 17, Spring boot, Gradle, Hibernate, Postgres + database migration tool (Liquibase), Lombok, Swagger.
   version: 0.0.1
 servers:
   - url: localhost:8080
@@ -13,74 +13,6 @@ tags:
     description: Available commands for nurses
 
 paths:
-  /patient/add:
-    post:
-      tags:
-        - Doctors
-      summary: Add a patient
-      description: Adds provided patient to database
-      operationId: addPatient
-      requestBody:
-        description: Patient info to be added to the database
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Patient'
-      responses:
-        '200':
-          description: Name successfully added
-  /patient/discharge/{insuranceNumber}:
-    delete:
-      tags:
-        - Doctors
-      summary: Discharge a patient by given insurance number
-      description: Deletes any prescriptions under the given insurance number, subsequently all related events.
-      operationId: dischargePatientByInsurance
-      parameters:
-        - name: insuranceNumber
-          in: path
-          description: The patient's insurance number found on Patients table.
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Succesfully discharged patient
-  /prescription:
-    post:
-      tags:
-        - Doctors
-      summary: Prescribe procedures or medication
-      description: Prescription is for the patient
-      operationId: createPrescription
-      requestBody:
-        description: Created prescription object
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Prescription'
-      responses:
-        '200':
-          description: Successfully added prescription
-  /prescription/delete/{prescriptionId}:
-    delete:
-      tags:
-        - Doctors
-      summary: Delete the given ID's prescription
-      description: ''
-      operationId: deletePrescriptionById
-      parameters:
-        - name: prescriptionId
-          in: path
-          description: The given prescription's ID in Prescriptions table
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Prescription succesfully removed
   /events:
     get:
       tags:
@@ -98,6 +30,38 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
+  /patient/add:
+    post:
+      tags:
+        - Doctors
+      summary: Add a patient
+      description: Adds provided patient to database
+      operationId: addPatient
+      requestBody:
+        description: Patient info to be added to the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '200':
+          description: Name successfully added
+  /prescription:
+    post:
+      tags:
+        - Doctors
+      summary: Prescribe procedures or medication
+      description: Prescription is for the patient
+      operationId: createPrescription
+      requestBody:
+        description: Created prescription object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Prescription'
+      responses:
+        '200':
+          description: Successfully added prescription
   /events/{eventId}:
     put:
       tags:
@@ -122,10 +86,86 @@ paths:
       responses:
         '200':
           description: Succesfully updated event
-  /events/cancel/{eventId}:
+  /prescription/modify:
     put:
       tags:
         - Doctors
+      summary: Modify a given prescription
+      description: Edit prescription (appointment) by ID, prescription parameter and its value
+      operationId: modifyPrescription
+      parameters:
+        - name: prescriptionId
+          in: query
+          description: Unique id of the prescription that will be modified
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: prescriptionParameter
+          in: query
+          description: Parameter that will be modifed
+          required: true
+          schema:
+            type: string
+            example: timePattern
+            enum:
+              - treatmentId
+              - timePattern
+              - period
+        - name: parameterValue
+          in: query
+          description: Value that will replace the parameter's current value
+          required: true
+          schema:
+            type: string
+            example: 3 times a week
+      responses:
+        '200':
+          description: Prescription succesfully modified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+  /patient/discharge/{insuranceNumber}:
+    delete:
+      tags:
+        - Doctors
+      summary: Discharge a patient by given insurance number
+      description: Deletes any prescriptions under the given insurance number, subsequently all related events.
+      operationId: dischargePatientByInsurance
+      parameters:
+        - name: insuranceNumber
+          in: path
+          description: The patient's insurance number found on Patients table.
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Succesfully discharged patient
+  /prescription/delete/{prescriptionId}:
+    delete:
+      tags:
+        - Doctors
+      summary: Delete the given ID's prescription
+      description: ''
+      operationId: deletePrescriptionById
+      parameters:
+        - name: prescriptionId
+          in: path
+          description: The given prescription's ID in Prescriptions table
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Prescription succesfully removed
+  /events/cancel/{eventId}:
+    put:
+      tags:
+        - Nurses
       summary: Cancel given event
       description: ''
       operationId: cancelEvent
@@ -137,9 +177,60 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: cancelReason
+          in: query
+          description: Reason for cancelling the event
+          required: true
+          schema:
+            type: string
+            example: Doctor's orders
+            default: Not Specified
       responses:
         '200':
           description: Succesfully canceled events
+  /events/modify:
+    put:
+      tags:
+        - Nurses
+      summary: Modify an event's parameters
+      description: ''
+      operationId: modEvent
+      parameters:
+        - name: eventId
+          in: query
+          description: Unique event ID of the event that will be modified
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 23
+        - name: eventParameter
+          in: query
+          description: Parameter that will be changed for given event
+          required: true
+          schema:
+            type: string
+            example: dateTime
+            default: status
+            enum:
+              - dateTime
+              - status
+        - name: parameterValue
+          in: query
+          required: true
+          schema:
+            type: string
+            example: parameter value
+            default: no input
+      responses:
+        '200':
+          description: Operation Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Event'
 
 components:
   schemas:
@@ -231,8 +322,9 @@ components:
             - Cancelled
         cancelReason:
           type: string
-          description: reason for cancelling the event
+          description: Reason for cancelling the event
           example: Doctor's orders
+          default: n/a
         treatmentId:
           type: integer
           format: int64
