@@ -1,4 +1,4 @@
-package com.gd.spring;
+package com.gd.clinic;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,12 +1,14 @@
 buildscript {
 	ext {
 		openApiVersion = "1.6.12"
+		openApiGeneratorVersion = "6.2.1"
 	}
 	repositories {
 		mavenLocal()
 		maven { url "https://repo1.maven.org/maven2" }
 	}
 }
+
 plugins {
 	id "org.springframework.boot" version "2.7.5"
 	id "io.spring.dependency-management" version "1.0.15.RELEASE"
@@ -14,11 +16,14 @@ plugins {
 	id "java"
 }
 
+sourceSets.main.java.srcDirs = ['build/generated/src/main/java','src/main/java']
+
 group = "com.gd"
 version = "0.0.1-SNAPSHOT"
 sourceCompatibility = "17"
 
 apply plugin: "org.openapi.generator"
+apply from: "openApi.gradle"
 
 configurations {
 	compileOnly {
@@ -33,24 +38,20 @@ repositories {
 dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-web"
 	implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
-	//implementation 'org.openapitools:openapi-generator-gradle-plugin:6.2.1'
+	implementation "org.openapitools:openapi-generator-gradle-plugin:${openApiGeneratorVersion}"
+
 	compileOnly "org.projectlombok:lombok"
+
 	annotationProcessor "org.projectlombok:lombok"
+
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+configurations {
+    all*.exclude module : 'spring-boot-starter-logging'
+    all*.exclude module : 'logback-classic'
 }
 
 tasks.named("test") {
 	useJUnitPlatform()
-}
-
-openApiGenerate {
-	generatorName = "spring"
-	inputSpec = "$rootDir/src/main/resources/api.yml".toString()
-	outputDir = "$buildDir/generated".toString()
-	apiPackage = "com.gd.spring.api"
-	invokerPackage = "com.gd.spring"
-	modelPackage = "com.gd.spring.model"
-	configOptions = [
-			dateLibrary: "java8"
-	]
 }

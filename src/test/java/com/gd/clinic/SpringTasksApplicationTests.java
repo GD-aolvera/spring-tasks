@@ -1,4 +1,4 @@
-package com.gd.spring;
+package com.gd.clinic;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
