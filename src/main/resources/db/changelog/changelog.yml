@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      runAlways: false
+      id: 20221107_01
+      author: S.R.
+      changes:
+        - sqlFile:
+            path: sql/001-create-registered-user.sql
+            encoding: utf8
+            relativeToChangelogFile: true
