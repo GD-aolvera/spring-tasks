@@ -13,6 +13,22 @@ tags:
     description: Available commands for nurses
 
 paths:
+  /treatments:
+    get:
+      tags:
+        - Admin
+      summary: Get all treatments
+      description: ''
+      operationId: getAllTreatments
+      responses:
+        '200':
+          description: All treatments successfully fetched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Treatment'
   /events:
     get:
       tags:
@@ -23,7 +39,7 @@ paths:
       operationId: getAllEvents
       responses:
         '200':
-          description: All events sucessfully fetched
+          description: All events successfully fetched
           content:
             application/json:
               schema:
@@ -85,7 +101,7 @@ paths:
               $ref: '#/components/schemas/Event'
       responses:
         '200':
-          description: Succesfully updated event
+          description: Successfully updated event
   /prescription/modify:
     put:
       tags:
@@ -103,7 +119,7 @@ paths:
             format: int64
         - name: prescriptionParameter
           in: query
-          description: Parameter that will be modifed
+          description: Parameter that will be modified
           required: true
           schema:
             type: string
@@ -121,7 +137,7 @@ paths:
             example: 3 times a week
       responses:
         '200':
-          description: Prescription succesfully modified
+          description: Prescription successfully modified
           content:
             application/json:
               schema:
@@ -143,7 +159,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: Succesfully discharged patient
+          description: Successfully discharged patient
   /prescription/delete/{prescriptionId}:
     delete:
       tags:
@@ -161,7 +177,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: Prescription succesfully removed
+          description: Prescription successfully removed
   /events/cancel/{eventId}:
     put:
       tags:
@@ -187,7 +203,7 @@ paths:
             default: Not Specified
       responses:
         '200':
-          description: Succesfully canceled events
+          description: Successfully canceled events
   /events/modify:
     put:
       tags:
@@ -302,12 +318,12 @@ components:
           type: integer
           format: int64
           example: 023
-          description: Related precriptions's id in Prescriptions table
+          description: Related prescription's id in Prescriptions table
         patientId:
           type: integer
           format: int64
           example: 123
-          description: Realated pateint's id in Patient table
+          description: Related patent's id in Patient table
         dateTime:
           type: string
           format: date-time
@@ -329,7 +345,7 @@ components:
           type: integer
           format: int64
           example: 234
-          description: The prescribre treatment's unique id in catalogue.
+          description: The prescribed treatment's unique id in catalogue.
     Treatment:
       type: object
       properties:
@@ -344,7 +360,7 @@ components:
           description: Name of procedure/medicine
         type:
           type: string
-          description: Wether the treatment is a procedure or a medicine
+          description: Whether the treatment is a procedure or a medicine
           example: Procedure
           enum:
             - Procedure
