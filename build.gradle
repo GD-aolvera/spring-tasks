@@ -40,10 +40,11 @@ dependencies {
 	implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
 	implementation "org.openapitools:openapi-generator-gradle-plugin:${openApiGeneratorVersion}"
 
+
 	compileOnly "org.projectlombok:lombok"
 
 	annotationProcessor "org.projectlombok:lombok"
-
+  
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
