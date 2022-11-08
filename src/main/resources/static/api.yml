@@ -29,23 +29,123 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Treatment'
-  /events:
+  /patient/{patientId}:
     get:
       tags:
         - Doctors
         - Nurses
-      summary: Get all events
+      summary: Get patient file with the given ID
       description: ''
-      operationId: getAllEvents
+      operationId: getPatient
+      parameters:
+        - name: patientId
+          in: path
+          description: Unique patient identifier from Patients table
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 234
       responses:
         '200':
-          description: All events successfully fetched
+          description: Patient file succesfuly fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+  /patients:
+    get:
+      tags:
+        - Doctors
+        - Nurses
+      summary: Get all patient files
+      description: ''
+      operationId: getAllPatients
+      responses:
+        '200':
+          description: Patient files succesfuly fetched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+  /patient/{patientId}/events:
+    get:
+      tags:
+        - Doctors
+        - Nurses
+      summary: Get all events for a patient with given ID
+      description: ''
+      operationId: getAllEventsFor
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          description: Unique patient identifier in patients table
+          schema:
+            type: integer
+            format: int64
+            example: 234
+      responses:
+        '200':
+          description: All events successfully fetched for patient ID
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
+  /patient/{patientId}/prescriptions:
+    get:
+      tags:
+        - Doctors
+        - Nurses
+      summary: Get prescriptions for the patient with the given ID
+      description: ''
+      operationId: getPrescriptionsOf
+      parameters:
+        - name: patientId
+          in: path
+          description: Unique patient identifier from Patients table
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 456
+      responses:
+        '200':
+          description: Succesfuly fetched prescriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Prescription'
+  /prescription/{prescriptionId}:
+    get:
+      tags:
+        - Doctors
+        - Nurses
+      summary: Get prescription info of given prescription ID
+      description: ''
+      operationId: getPrescription
+      parameters:
+        - name: prescriptionId
+          in: path
+          description: Unique prescription identifier in Precriptions table
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 234
+      responses:
+        '200':
+          description: Prescription succesfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
   /patient/add:
     post:
       tags:
@@ -78,6 +178,48 @@ paths:
       responses:
         '200':
           description: Successfully added prescription
+  /patient/edit/{patientId}:
+    put:
+      tags:
+        - Doctors
+      summary: Edit patient file of the given ID
+      description: ''
+      operationId: editPatient
+      parameters:
+        - name: patientId
+          in: path
+          description: ID of the patient that will be edited
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 123
+        - name: patientParameter
+          in: query
+          description: Parameter that will be modified in patient's file
+          required: true
+          schema:
+            type: string
+            example: diagnosis
+            enum:
+              - name
+              - diagnosis
+              - insuranceNumber
+              - doctorId
+              - status
+        - name: parameterValue
+          in: query
+          description: Value that will replace the specified parameter's current value
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: patient sucessfully modified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
   /events/{eventId}:
     put:
       tags:
@@ -102,7 +244,7 @@ paths:
       responses:
         '200':
           description: Successfully updated event
-  /prescription/modify:
+  /prescription/modify/{prescriptionId}:
     put:
       tags:
         - Doctors
@@ -111,7 +253,7 @@ paths:
       operationId: modifyPrescription
       parameters:
         - name: prescriptionId
-          in: query
+          in: path
           description: Unique id of the prescription that will be modified
           required: true
           schema:
@@ -142,6 +284,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Prescription'
+  /events/modify/{eventId}:
+    put:
+      tags:
+        - Doctors
+        - Nurses
+      summary: Modify an event's parameters
+      description: ''
+      operationId: modEvent
+      parameters:
+        - name: eventId
+          in: path
+          description: Unique event ID of the event that will be modified
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 23
+        - name: eventParameter
+          in: query
+          description: Parameter that will be changed for given event
+          required: true
+          schema:
+            type: string
+            example: dateTime
+            default: status
+            enum:
+              - dateTime
+              - status
+        - name: parameterValue
+          in: query
+          required: true
+          schema:
+            type: string
+            example: parameter value
+            default: no input
+      responses:
+        '200':
+          description: Operation Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/Event'
   /patient/discharge/{insuranceNumber}:
     delete:
       tags:
@@ -204,50 +390,6 @@ paths:
       responses:
         '200':
           description: Successfully canceled events
-  /events/modify:
-    put:
-      tags:
-        - Nurses
-      summary: Modify an event's parameters
-      description: ''
-      operationId: modEvent
-      parameters:
-        - name: eventId
-          in: query
-          description: Unique event ID of the event that will be modified
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 23
-        - name: eventParameter
-          in: query
-          description: Parameter that will be changed for given event
-          required: true
-          schema:
-            type: string
-            example: dateTime
-            default: status
-            enum:
-              - dateTime
-              - status
-        - name: parameterValue
-          in: query
-          required: true
-          schema:
-            type: string
-            example: parameter value
-            default: no input
-      responses:
-        '200':
-          description: Operation Successful
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Event'
-
 components:
   schemas:
     Patient:
@@ -306,6 +448,10 @@ components:
           format: int64
           example: 5
           description: Duration of the treatment in days
+        datePrescribed:
+          type: string
+          format: date-time
+          description: Date and time of prescription
     Event:
       type: object
       properties:
