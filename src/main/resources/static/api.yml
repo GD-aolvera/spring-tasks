@@ -5,7 +5,7 @@ info:
     A simple application demo for hospital management created at the Grid Dynamics Java internship. The app uses Java 17, Spring boot, Gradle, Hibernate, Postgres + database migration tool (Liquibase), Lombok, Swagger.
   version: 0.0.1
 servers:
-  - url: localhost:8080
+  - url: https://localhost:8080
 tags:
   - name: Doctors
     description: Available commands for doctors
