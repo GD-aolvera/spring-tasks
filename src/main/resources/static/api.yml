@@ -5,18 +5,17 @@ info:
     A simple application demo for hospital management created at the Grid Dynamics Java internship. The app uses Java 17, Spring boot, Gradle, Hibernate, Postgres + database migration tool (Liquibase), Lombok, Swagger.
   version: 0.0.1
 servers:
-  - url: localhost:8080
+  - url: https://localhost:8080
 tags:
   - name: Doctors
     description: Available commands for doctors
   - name: Nurses
     description: Available commands for nurses
-
 paths:
   /treatments:
     get:
       tags:
-        - Admin
+        - Doctors
       summary: Get all treatments
       description: ''
       operationId: getAllTreatments
@@ -29,7 +28,43 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Treatment'
-  /patient/{patientId}:
+  /patients:
+    get:
+      tags:
+        - Doctors
+        - Nurses
+      summary: Get all patient files
+      description: ''
+      operationId: getAllPatients
+      responses:
+        '200':
+          description: Patient files successfully fetched
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+    post:
+      tags:
+        - Doctors
+      summary: Add a patient
+      description: Adds provided patient to database
+      operationId: addPatient
+      requestBody:
+        description: Patient info to be added to the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPatient'
+      responses:
+        '200':
+          description: Patient successfully added to database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+  /patients/{patientId}:
     get:
       tags:
         - Doctors
@@ -43,34 +78,61 @@ paths:
           description: Unique patient identifier from Patients table
           required: true
           schema:
-            type: integer
-            format: int64
-            example: 234
+            type: string
+            example: UUID
       responses:
         '200':
-          description: Patient file succesfuly fetched
+          description: Patient file successfully fetched
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Patient'
-  /patients:
-    get:
+    put:
       tags:
         - Doctors
-        - Nurses
-      summary: Get all patient files
+      summary: Edit patient file of the given ID
       description: ''
-      operationId: getAllPatients
+      operationId: editPatient
+      parameters:
+        - name: patientId
+          in: path
+          description: ID of the patient that will be edited
+          required: true
+          schema:
+            type: string
+            example: UUID
+      requestBody:
+        description: Patient's JSON file that will replace existing one
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPatient'
+
       responses:
         '200':
-          description: Patient files succesfuly fetched
+          description: patient successfully modified
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Patient'
-  /patient/{patientId}/events:
+                $ref: '#/components/schemas/Patient'
+    delete:
+      tags:
+        - Doctors
+      summary: Discharge a patient by given ID
+      description: Deletes any prescriptions under the given insurance number, subsequently all related events.
+      operationId: dischargePatientByInsurance
+      parameters:
+        - name: patientId
+          in: path
+          description: The patient's unqiue identifier found on the Patients table.
+          required: true
+          schema:
+            type: string
+            example: UUID
+      responses:
+        '200':
+          description: Successfully discharged patient
+  /patients/{patientId}/events:
     get:
       tags:
         - Doctors
@@ -84,9 +146,8 @@ paths:
           required: true
           description: Unique patient identifier in patients table
           schema:
-            type: integer
-            format: int64
-            example: 234
+            type: string
+            example: UUID
       responses:
         '200':
           description: All events successfully fetched for patient ID
@@ -96,7 +157,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Event'
-  /patient/{patientId}/prescriptions:
+  /patients/{patientId}/prescriptions:
     get:
       tags:
         - Doctors
@@ -110,19 +171,45 @@ paths:
           description: Unique patient identifier from Patients table
           required: true
           schema:
-            type: integer
-            format: int64
-            example: 456
+            type: string
+            example: UUID
       responses:
         '200':
-          description: Succesfuly fetched prescriptions
+          description: Successfully fetched prescriptions
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Prescription'
-  /prescription/{prescriptionId}:
+    post:
+      tags:
+        - Doctors
+      summary: Prescribe procedures or medication
+      description: Prescription is for the patient
+      operationId: createPrescription
+      parameters:
+        - name: patientId
+          in: path
+          description: UUID of patient that will be prescribed
+          required: true
+          schema:
+            type: string
+            example: UUID
+      requestBody:
+        description: Created prescription object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPrescription'
+      responses:
+        '200':
+          description: Successfully added prescription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Prescription'
+  /prescriptions/{prescriptionId}:
     get:
       tags:
         - Doctors
@@ -133,118 +220,18 @@ paths:
       parameters:
         - name: prescriptionId
           in: path
-          description: Unique prescription identifier in Precriptions table
+          description: Unique prescription identifier in Prescriptions table
           required: true
           schema:
-            type: integer
-            format: int64
-            example: 234
+            type: string
+            example: UUID
       responses:
         '200':
-          description: Prescription succesfully fetched
+          description: Prescription successfully fetched
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Prescription'
-  /patient/add:
-    post:
-      tags:
-        - Doctors
-      summary: Add a patient
-      description: Adds provided patient to database
-      operationId: addPatient
-      requestBody:
-        description: Patient info to be added to the database
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Patient'
-      responses:
-        '200':
-          description: Name successfully added
-  /prescription:
-    post:
-      tags:
-        - Doctors
-      summary: Prescribe procedures or medication
-      description: Prescription is for the patient
-      operationId: createPrescription
-      requestBody:
-        description: Created prescription object
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Prescription'
-      responses:
-        '200':
-          description: Successfully added prescription
-  /patient/edit/{patientId}:
-    put:
-      tags:
-        - Doctors
-      summary: Edit patient file of the given ID
-      description: ''
-      operationId: editPatient
-      parameters:
-        - name: patientId
-          in: path
-          description: ID of the patient that will be edited
-          required: true
-          schema:
-            type: integer
-            format: int64
-            example: 123
-        - name: patientParameter
-          in: query
-          description: Parameter that will be modified in patient's file
-          required: true
-          schema:
-            type: string
-            example: diagnosis
-            enum:
-              - name
-              - diagnosis
-              - insuranceNumber
-              - doctorId
-              - status
-        - name: parameterValue
-          in: query
-          description: Value that will replace the specified parameter's current value
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: patient sucessfully modified
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Patient'
-  /events/{eventId}:
-    put:
-      tags:
-        - Doctors
-      summary: Modify given event
-      description: ''
-      operationId: modifyEvent
-      parameters:
-        - name: eventId
-          in: path
-          description: ID of the event that will be modified
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        description: Modified event that will replace the one with the given ID.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Event'
-      responses:
-        '200':
-          description: Successfully updated event
-  /prescription/modify/{prescriptionId}:
     put:
       tags:
         - Doctors
@@ -257,26 +244,14 @@ paths:
           description: Unique id of the prescription that will be modified
           required: true
           schema:
-            type: integer
-            format: int64
-        - name: prescriptionParameter
-          in: query
-          description: Parameter that will be modified
-          required: true
-          schema:
             type: string
-            example: timePattern
-            enum:
-              - treatmentId
-              - timePattern
-              - period
-        - name: parameterValue
-          in: query
-          description: Value that will replace the parameter's current value
-          required: true
-          schema:
-            type: string
-            example: 3 times a week
+            example: UUID
+      requestBody:
+        description: Prescription JSON file that will replace the one with the provided ID.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPrescription'
       responses:
         '200':
           description: Prescription successfully modified
@@ -284,7 +259,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Prescription'
-  /events/modify/{eventId}:
+    delete:
+      tags:
+        - Doctors
+      summary: Delete the given ID's prescription
+      description: ''
+      operationId: deletePrescriptionById
+      parameters:
+        - name: prescriptionId
+          in: path
+          description: The given prescription's ID in Prescriptions table
+          required: true
+          schema:
+            type: string
+            example: UUID
+      responses:
+        '200':
+          description: Prescription successfully removed
+  /events/{eventId}:
     put:
       tags:
         - Doctors
@@ -298,73 +290,22 @@ paths:
           description: Unique event ID of the event that will be modified
           required: true
           schema:
-            type: integer
-            format: int64
-            example: 23
-        - name: eventParameter
-          in: query
-          description: Parameter that will be changed for given event
-          required: true
-          schema:
             type: string
-            example: dateTime
-            default: status
-            enum:
-              - dateTime
-              - status
-        - name: parameterValue
-          in: query
-          required: true
-          schema:
-            type: string
-            example: parameter value
-            default: no input
+            example: UUID
+      requestBody:
+        description: Event JSON file that will replace the entry at given Event ID
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewEvent'
       responses:
         '200':
           description: Operation Successful
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/Event'
-  /patient/discharge/{insuranceNumber}:
-    delete:
-      tags:
-        - Doctors
-      summary: Discharge a patient by given insurance number
-      description: Deletes any prescriptions under the given insurance number, subsequently all related events.
-      operationId: dischargePatientByInsurance
-      parameters:
-        - name: insuranceNumber
-          in: path
-          description: The patient's insurance number found on Patients table.
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Successfully discharged patient
-  /prescription/delete/{prescriptionId}:
-    delete:
-      tags:
-        - Doctors
-      summary: Delete the given ID's prescription
-      description: ''
-      operationId: deletePrescriptionById
-      parameters:
-        - name: prescriptionId
-          in: path
-          description: The given prescription's ID in Prescriptions table
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Prescription successfully removed
-  /events/cancel/{eventId}:
+                $ref: '#/components/schemas/Event'
+  /events/{eventId}/cancel:
     put:
       tags:
         - Nurses
@@ -377,8 +318,8 @@ paths:
           description: ID of the event that will be canceled
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
+            example: UUID
         - name: cancelReason
           in: query
           description: Reason for cancelling the event
@@ -389,16 +330,15 @@ paths:
             default: Not Specified
       responses:
         '200':
-          description: Successfully canceled events
+          description: Successfully canceled event
 components:
   schemas:
     Patient:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
-          example: 001
+          type: string
+          example: UUID
         name:
           type: string
           description: Name of the patient
@@ -406,14 +346,38 @@ components:
         diagnosis:
           type: string
           description: Patient's diagnosis
-          example: tuberculosis
+          example: Tuberculosis
+        insuranceNumber:
+          type: string
+          example: AO8323
+        doctorId:
+          type: string
+          description: UUID
+        status:
+          type: string
+          description: patient's treatment progress
+          example: In treatment
+          enum:
+            - In treatment
+            - recovered
+    NewPatient:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the patient
+          example: John Smith
+        diagnosis:
+          type: string
+          description: Patient's diagnosis
+          example: Tuberculosis
         insuranceNumber:
           type: integer
           format: int64
-          example: 002
+          example: 08323
         doctorId:
-          type: integer
-          format: int64
+          type: string
+          example: UUID
           description: doctor's id in doctor catalogue
         status:
           type: string
@@ -422,22 +386,35 @@ components:
           enum:
             - In treatment
             - recovered
+    NewPrescription:
+      type: object
+      properties:
+        treatmentId:
+          type: string
+          example: UUID
+          description: The prescribed treatment's unique id in catalogue.
+        timePattern:
+          type: string
+          description: Frequency of treatment
+          example: Once a day
+        period:
+          type: integer
+          format: int64
+          example: 5
+          description: Duration of the treatment in days
     Prescription:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
-          example: 001
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
         patientId:
-          type: integer
-          format: int64
-          example: 001
+          type: string
+          example: 123e4547-e89b-12d3-a456-426614174000
           description: The patient's id in patients catalogue.
         treatmentId:
-          type: integer
-          format: int64
-          example: 234
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174233
           description: The prescribed treatment's unique id in catalogue.
         timePattern:
           type: string
@@ -452,23 +429,38 @@ components:
           type: string
           format: date-time
           description: Date and time of prescription
+    NewEvent:
+      type: object
+      properties:
+        prescriptionId:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174223
+          description: Related prescription's id in Prescriptions table
+        dateTime:
+          type: string
+          format: date-time
+          description: Scheduled date and time for the event.
+        status:
+          type: string
+          description: Current event status
+          example: Done
+          enum:
+            - Scheduled
+            - Done
     Event:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
-          example: 001
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174233
           description: Unique event id
         prescriptionId:
-          type: integer
-          format: int64
-          example: 023
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174223
           description: Related prescription's id in Prescriptions table
         patientId:
-          type: integer
-          format: int64
-          example: 123
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174342
           description: Related patent's id in Patient table
         dateTime:
           type: string
@@ -487,18 +479,12 @@ components:
           description: Reason for cancelling the event
           example: Doctor's orders
           default: n/a
-        treatmentId:
-          type: integer
-          format: int64
-          example: 234
-          description: The prescribed treatment's unique id in catalogue.
     Treatment:
       type: object
       properties:
         id:
-          type: integer
-          format: int64
-          example: 001
+          type: string
+          example: 123e4567-e89b-12d3-a456-4266141742334
           description: Unique treatment identifier in catalogue
         name:
           type: string
@@ -511,6 +497,69 @@ components:
           enum:
             - Procedure
             - Medicine
+    NewUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: John
+          description: The user's first name
+        lastName:
+          type: string
+          example: Doe
+          description: The user's last name
+        password:
+          type: string
+          format: password
+          example: ao12!B45
+          description: The user's password
+        role:
+          type: string
+          example: admin
+          description: User's authorization level
+          enum:
+            - admin
+            - doctor
+            - nurse
+    UserResponse:
+      properties:
+        id:
+          type: string
+          example: 123e4567-e89b-12d3-a456-426614174233
+          description: User's unique identifier in Users table
+        firstName:
+          type: string
+          example: John
+          description: The user's first name
+        lastName:
+          type: string
+          example: Doe
+          description: The user's last name
+        userName:
+          type: string
+          example: dBowie
+          description: Username
+        password:
+          type: string
+          format: password
+          example: ao12!B45
+          description: The user's password
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time in which the User was created
+        createdBy:
+          type: string
+          example: "drDooLittle"
+          description: Username of this user's creator
+        role:
+          type: string
+          example: admin
+          description: User's authorization level
+          enum:
+            - admin
+            - doctor
+            - nurse
   requestBodies:
     Patient:
       description: Patient object that will be added to the database
