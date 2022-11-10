@@ -13,7 +13,6 @@ tags:
     description: Available commands for nurses
   - name: Admin
     description: Available commands for platform admin and auth
-
 paths:
   /treatments:
     get:
