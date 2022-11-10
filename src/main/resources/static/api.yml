@@ -11,6 +11,8 @@ tags:
     description: Available commands for doctors
   - name: Nurses
     description: Available commands for nurses
+  - name: Admin
+    description: Available commands for platform admin and auth
 
 paths:
   /treatments:
@@ -48,7 +50,7 @@ paths:
             example: 234
       responses:
         '200':
-          description: Patient file succesfuly fetched
+          description: Patient file successfully fetched
           content:
             application/json:
               schema:
@@ -63,7 +65,7 @@ paths:
       operationId: getAllPatients
       responses:
         '200':
-          description: Patient files succesfuly fetched
+          description: Patient files successfully fetched
           content:
             application/json:
               schema:
@@ -115,7 +117,7 @@ paths:
             example: 456
       responses:
         '200':
-          description: Succesfuly fetched prescriptions
+          description: Successfully fetched prescriptions
           content:
             application/json:
               schema:
@@ -133,7 +135,7 @@ paths:
       parameters:
         - name: prescriptionId
           in: path
-          description: Unique prescription identifier in Precriptions table
+          description: Unique prescription identifier in Prescriptions table
           required: true
           schema:
             type: integer
@@ -141,7 +143,7 @@ paths:
             example: 234
       responses:
         '200':
-          description: Prescription succesfully fetched
+          description: Prescription successfully fetched
           content:
             application/json:
               schema:
@@ -215,7 +217,7 @@ paths:
             type: string
       responses:
         '200':
-          description: patient sucessfully modified
+          description: patient successfully modified
           content:
             application/json:
               schema:
@@ -390,6 +392,48 @@ paths:
       responses:
         '200':
           description: Successfully canceled events
+  /admin/user/create:
+    post:
+      tags:
+        - Admin
+      summary: Create new user
+      description: ''
+      operationId: createUser
+      requestBody:
+        description: User Object that will be passed for creation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+      responses:
+        '200':
+          description: Successfully created user
+  /auth/login:
+    post:
+      tags:
+        - Admin
+      summary: Authenticate with given username and password
+      description: ''
+      operationId: login
+      parameters:
+        - name: user
+          in: query
+          description: Username
+          required: true
+          schema:
+            type: string
+            example: ao123
+        - name: password
+          in: query
+          description: Password
+          required: true
+          schema:
+            type: string
+            example: pass123$
+      responses:
+        '200':
+          description: Successful Authentication
+
 components:
   schemas:
     Patient:
@@ -511,6 +555,29 @@ components:
           enum:
             - Procedure
             - Medicine
+    NewUser:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: John
+          description: The user's first name
+        lastName:
+          type: string
+          example: Doe
+          description: The user's last name
+        password:
+          type: string
+          example: ao12!B45
+          description: The user's password
+        role:
+          type: string
+          example: admin
+          description: User's authorization level
+          enum:
+            - admin
+            - doctor
+            - nurse
   requestBodies:
     Patient:
       description: Patient object that will be added to the database
