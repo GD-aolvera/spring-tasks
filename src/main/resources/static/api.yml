@@ -11,6 +11,8 @@ tags:
     description: Available commands for doctors
   - name: Nurses
     description: Available commands for nurses
+  - name: Admin
+    description: Available commands for admin / auth
 paths:
   /treatments:
     get:
@@ -124,7 +126,7 @@ paths:
       parameters:
         - name: patientId
           in: path
-          description: The patient's unqiue identifier found on the Patients table.
+          description: The patient's unique identifier found on the Patients table.
           required: true
           schema:
             type: string
