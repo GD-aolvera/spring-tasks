@@ -378,7 +378,13 @@ paths:
             example: pass123$
       responses:
         '200':
-          description: Successful Authentication
+          description: Successful Authentication, providing token
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDU2Nzg5LCJuYW1lIjoiSm9zZXBoIn0.OpOSSw7e485LOP5PrzScxHb7SR6sAOMRckfFwi4rp7o
+
 components:
   schemas:
     Patient:
