@@ -2,7 +2,7 @@ buildscript {
 	ext {
 		openApiVersion = "1.6.12"
 		openApiGeneratorVersion = "6.2.1"
-		springSecVersion = "2.7.5"
+		springVersion = "2.7.5"
 		jjwtVersion = "0.11.5"
 	}
 	repositories {
@@ -44,7 +44,8 @@ dependencies {
 	implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 	implementation "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
 	implementation "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
-	implementation "org.springframework.boot:spring-boot-starter-security:${springSecVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-security:${springVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springVersion}"
 
 	compileOnly "org.projectlombok:lombok"
 
