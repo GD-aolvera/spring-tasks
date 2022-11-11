@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class WebSecurityConfig {
 
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService = new UserDetailServiceImpl();
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
 
 

@@ -562,6 +562,10 @@ components:
           type: string
           example: Doe
           description: The user's last name
+        userName:
+            type: string
+            example: aolvera
+            description: The user's login identifier
         password:
           type: string
           format: password

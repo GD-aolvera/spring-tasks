@@ -1,13 +1,13 @@
 package com.gd.clinic.repository;
 
-import com.gd.clinic.model.UserResponseDto;
+import com.gd.clinic.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepo extends JpaRepository<UserResponseDto, Integer> {
+public interface UserRepo extends JpaRepository<User, Integer> {
 
-    Optional<UserResponseDto> findOneByUsername(String username);
+    Optional<User> findOneByUserName(String userName);
 }

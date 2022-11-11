@@ -1,1 +1,10 @@
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:h2:mem:accounttestdb
+    driverClassName: org.h2.Driver
+    password: 'aolvera'
+  jpa:
+    hibernate:
+      ddl-auto: create
 

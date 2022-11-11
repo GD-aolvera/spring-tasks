@@ -1,5 +1,6 @@
 package com.gd.clinic.config.security;
 
+import com.gd.clinic.entities.User;
 import com.gd.clinic.model.UserResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +12,7 @@ import java.util.Collections;
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
-    private final UserResponseDto user;
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
