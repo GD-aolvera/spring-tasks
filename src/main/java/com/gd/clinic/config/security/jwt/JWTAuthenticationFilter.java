@@ -1,4 +1,4 @@
-package com.gd.clinic.config.security;
+package com.gd.clinic.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -32,8 +33,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
       UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
       String token = TokenUtils.createToken(userDetails.getName(), userDetails.getUsername());
+      PrintWriter writer = response.getWriter();
 
       response.addHeader("Authorization", "Bearer " + token);
+      response.setHeader("Content-Type", "text/plain");
+      writer.write("Bearer " + token);
       response.getWriter().flush();
 
         super.successfulAuthentication(request, response, chain, authResult);

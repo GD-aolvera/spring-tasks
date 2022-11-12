@@ -1,4 +1,4 @@
-package com.gd.clinic.config.security;
+package com.gd.clinic.config.security.jwt;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

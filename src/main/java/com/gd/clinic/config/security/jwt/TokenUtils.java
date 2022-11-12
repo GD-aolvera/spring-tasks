@@ -1,4 +1,4 @@
-package com.gd.clinic.config.security;
+package com.gd.clinic.config.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -15,12 +15,12 @@ public class TokenUtils {
     private final static String ACCESS_TOKEN_SECRET = "eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp9";
     private final static Long ACCESS_TOKEN_VALIDITY_SECONDS = 2_592_000L;
 
-    public static String createToken(String username, String email){
+    public static String createToken(String username, String lastName){
         long expirationTime = ACCESS_TOKEN_VALIDITY_SECONDS * 1_000;
         Date expirationDate = new Date(System.currentTimeMillis() + expirationTime);
 
         Map<String, Object> extra = new HashMap<>();
-        extra.put("email", email);
+        extra.put("lastName", lastName);
 
         return Jwts.builder()
                 .setSubject(username)

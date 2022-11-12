@@ -360,31 +360,14 @@ paths:
       summary: Authenticate with given username and password
       description: ''
       operationId: login
-      parameters:
-        - name: user
-          in: query
-          description: Username
-          required: true
-          schema:
-            type: string
-            example: ao123
-        - name: password
-          in: query
-          description: Password
-          required: true
-          schema:
-            type: string
-            format: password
-            example: pass123$
+      requestBody:
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Credentials'
       responses:
         '200':
-          description: Successful Authentication, providing token
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDU2Nzg5LCJuYW1lIjoiSm9zZXBoIn0.OpOSSw7e485LOP5PrzScxHb7SR6sAOMRckfFwi4rp7o
-
+          description: Auth token in response header -> "authorization:"
 components:
   schemas:
     Patient:
@@ -618,6 +601,16 @@ components:
             - admin
             - doctor
             - nurse
+    Credentials:
+      properties:
+          username:
+            type: string
+            example: jPerez
+            description: The user's ID
+          password:
+            type: string
+            example: ASsda233F2!
+            description: The user's password
   requestBodies:
     Patient:
       description: Patient object that will be added to the database

@@ -1,7 +1,6 @@
-package com.gd.clinic.config.security;
+package com.gd.clinic.config.security.jwt;
 
-import com.gd.clinic.entities.User;
-import com.gd.clinic.model.UserResponseDto;
+import com.gd.clinic.config.security.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
