@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NurseController implements NursesApi {
 
     @Override
-    public ResponseEntity<Void> cancelEvent(Long eventId, String cancelReason) {
+    public ResponseEntity<Void> cancelEvent(String eventId, String cancelReason) {
         return null;
     }
 }

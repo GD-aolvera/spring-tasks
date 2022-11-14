@@ -1,9 +1,7 @@
 package com.gd.clinic.controller;
 
 import com.gd.clinic.api.DoctorsApi;
-import com.gd.clinic.model.EventDto;
-import com.gd.clinic.model.PatientDto;
-import com.gd.clinic.model.PrescriptionDto;
+import com.gd.clinic.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,32 +11,32 @@ import java.util.List;
 public class DoctorController implements DoctorsApi {
 
   @Override
-  public ResponseEntity<Void> addPatient(PatientDto patientDto) {
+  public ResponseEntity<PatientDto> addPatient(NewPatientDto newPatientDto) {
     return null;
   }
 
   @Override
-  public ResponseEntity<Void> createPrescription(PrescriptionDto prescriptionDto) {
+  public ResponseEntity<PrescriptionDto> createPrescription(String patientId, NewPrescriptionDto newPrescriptionDto) {
     return null;
   }
 
   @Override
-  public ResponseEntity<Void> deletePrescriptionById(Long prescriptionId) {
+  public ResponseEntity<Void> deletePrescriptionById(String prescriptionId) {
     return null;
   }
 
   @Override
-  public ResponseEntity<Void> dischargePatientByInsurance(Long insuranceNumber) {
+  public ResponseEntity<Void> dischargePatientByInsurance(String patientId) {
     return null;
   }
 
   @Override
-  public ResponseEntity<PatientDto> editPatient(Long patientId, String patientParameter, String parameterValue) {
+  public ResponseEntity<PatientDto> editPatient(String patientId, NewPatientDto newPatientDto) {
     return null;
   }
 
   @Override
-  public ResponseEntity<List<EventDto>> getAllEventsFor(Long patientId) {
+  public ResponseEntity<List<EventDto>> getAllEventsFor(String patientId) {
     return null;
   }
 
@@ -48,32 +46,32 @@ public class DoctorController implements DoctorsApi {
   }
 
   @Override
-  public ResponseEntity<PatientDto> getPatient(Long patientId) {
+  public ResponseEntity<List<TreatmentDto>> getAllTreatments() {
     return null;
   }
 
   @Override
-  public ResponseEntity<PrescriptionDto> getPrescription(Long prescriptionId) {
+  public ResponseEntity<PatientDto> getPatient(String patientId) {
     return null;
   }
 
   @Override
-  public ResponseEntity<List<PrescriptionDto>> getPrescriptionsOf(Long patientId) {
+  public ResponseEntity<PrescriptionDto> getPrescription(String prescriptionId) {
     return null;
   }
 
   @Override
-  public ResponseEntity<List<EventDto>> modEvent(Long eventId, String eventParameter, String parameterValue) {
+  public ResponseEntity<List<PrescriptionDto>> getPrescriptionsOf(String patientId) {
     return null;
   }
 
   @Override
-  public ResponseEntity<Void> modifyEvent(Long eventId, EventDto eventDto) {
+  public ResponseEntity<EventDto> modEvent(String eventId, NewEventDto newEventDto) {
     return null;
   }
 
   @Override
-  public ResponseEntity<PrescriptionDto> modifyPrescription(Long prescriptionId, String prescriptionParameter, String parameterValue) {
+  public ResponseEntity<PrescriptionDto> modifyPrescription(String prescriptionId, NewPrescriptionDto newPrescriptionDto) {
     return null;
   }
 }
