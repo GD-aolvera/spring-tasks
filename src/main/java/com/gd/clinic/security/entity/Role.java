@@ -1,6 +1,6 @@
-package com.gd.clinic.config.security.entity;
+package com.gd.clinic.security.entity;
 
-import com.gd.clinic.config.security.enums.RoleName;
+import com.gd.clinic.security.enums.RoleName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Data
+@Entity
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

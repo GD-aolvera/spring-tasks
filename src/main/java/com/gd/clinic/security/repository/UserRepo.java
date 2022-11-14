@@ -1,6 +1,6 @@
-package com.gd.clinic.config.security.repository;
+package com.gd.clinic.security.repository;
 
-import com.gd.clinic.config.security.entity.User;
+import com.gd.clinic.security.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +11,5 @@ public interface UserRepo extends JpaRepository<User, Integer> {
 
     Optional<User> findOneByUserName(String userName);
     boolean existsByUserName(String userName);
-    boolean existsByName(String name);
+
 }

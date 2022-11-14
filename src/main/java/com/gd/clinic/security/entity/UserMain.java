@@ -1,4 +1,4 @@
-package com.gd.clinic.config.security.entity;
+package com.gd.clinic.security.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,14 +19,16 @@ public class UserMain implements UserDetails {
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
+    private User user;
+
     public static UserMain build(User user){
-        List<GrantedAuthority> authorityList = user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getRoleName().name())).collect(Collectors.toList());
-        return new UserMain(user.getFirstName(), user.getLastName(), user.getUserName(), user.getPassword(), authorityList);
+        List<GrantedAuthority> authorityList = user.getRole().stream().map(role -> new SimpleGrantedAuthority(role.getRoleName().name())).collect(Collectors.toList());
+        return new UserMain(user.getFirstName(), user.getLastName(), user.getUserName(), user.getPassword(), authorityList, user);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return user.getRole().stream().map(role -> new SimpleGrantedAuthority(role.getRoleName().toString())).collect(Collectors.toList());
     }
 
     @Override
@@ -57,5 +59,8 @@ public class UserMain implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    public String getName(){
+        return user.getFirstName() + " " + user.getLastName();
     }
 }

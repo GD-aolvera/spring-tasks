@@ -1,13 +1,19 @@
-package com.gd.clinic.config.security;
+package com.gd.clinic.security;
 
-import com.gd.clinic.config.security.jwt.JWTAuthenticationFilter;
-import com.gd.clinic.config.security.jwt.JWTAuthorizationFilter;
+import com.gd.clinic.security.jwt.JWTAuthenticationFilter;
+import com.gd.clinic.security.jwt.JWTAuthorizationFilter;
+import com.gd.clinic.security.service.UserDetailServiceImpl;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,9 +23,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @AllArgsConstructor
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
-    private final UserDetailsService userDetailsService;
+
+    @Autowired
+    private final UserDetailServiceImpl userDetailsService;
+    @Autowired
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
 
 
@@ -31,6 +42,7 @@ public class WebSecurityConfig {
 
         return http
                 .csrf().disable()
+                .authenticationProvider(authenticationProvider())
                 .authorizeRequests()
                 .antMatchers(
                         "/swagger-ui/**",
@@ -52,23 +64,25 @@ public class WebSecurityConfig {
                 .build();
     }
 
-//   @Bean
-//    UserDetailsService userDetailsService(){
-//        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//        manager.createUser(User.withUsername("admin").password(passwordEncoder().encode("admin")).roles().build());
-//        return manager;
-
     @Bean
-    AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder())
-                .and()
-                .build();
+    DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @SneakyThrows
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
+        return  authConfig.getAuthenticationManager();
     }
 
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    UserDetailsService setUserDetailsServiceFactoryBean(){return new UserDetailServiceImpl();}
 }

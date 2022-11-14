@@ -1,6 +1,7 @@
-package com.gd.clinic.config.security.jwt;
+package com.gd.clinic.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gd.clinic.security.entity.UserMain;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -21,25 +22,21 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         AuthCredentials authCredentials = new AuthCredentials();
         try {
             authCredentials = new ObjectMapper().readValue(request.getReader(), AuthCredentials.class);
-        } catch (IOException e){
+        } catch (IOException ignored){
         }
-
         UsernamePasswordAuthenticationToken usernamePAT = new UsernamePasswordAuthenticationToken(authCredentials.getUsername(), authCredentials.getPassword(), Collections.emptyList());
         return getAuthenticationManager().authenticate(usernamePAT);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-
-      UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
-      String token = TokenUtils.createToken(userDetails.getName(), userDetails.getUsername());
-      PrintWriter writer = response.getWriter();
-
-      response.addHeader("Authorization", "Bearer " + token);
-      response.setHeader("Content-Type", "text/plain");
-      writer.write("Bearer " + token);
-      response.getWriter().flush();
-
+        UserMain userDetails = (UserMain) authResult.getPrincipal();
+        String token = TokenUtils.createToken(userDetails.getUsername(), userDetails.getName());
+        PrintWriter writer = response.getWriter();
+        response.addHeader("Authorization", "Bearer " + token);
+        response.setHeader("Content-Type", "text/plain");
+        writer.write(token);
+        response.getWriter().flush();
         super.successfulAuthentication(request, response, chain, authResult);
     }
 }

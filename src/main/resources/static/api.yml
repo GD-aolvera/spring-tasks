@@ -362,9 +362,9 @@ paths:
       operationId: login
       requestBody:
         content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Credentials'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
       responses:
         '200':
           description: Auth token in response header -> "authorization:"
@@ -546,22 +546,20 @@ components:
           example: Doe
           description: The user's last name
         userName:
-            type: string
-            example: aolvera
-            description: The user's login identifier
+          type: string
+          example: aolvera
+          description: The user's login identifier
         password:
           type: string
           format: password
           example: ao12!B45
           description: The user's password
         role:
-          type: string
-          example: admin
+          type: array
+          items:
+            type: string
+          example: [admin, doctor]
           description: User's authorization level
-          enum:
-            - admin
-            - doctor
-            - nurse
     UserResponse:
       properties:
         id:
@@ -594,23 +592,21 @@ components:
           example: "drDooLittle"
           description: Username of this user's creator
         role:
-          type: string
-          example: admin
+          type: array
+          items:
+            type: string
+          example: [admin, doctor]
           description: User's authorization level
-          enum:
-            - admin
-            - doctor
-            - nurse
     Credentials:
       properties:
-          username:
-            type: string
-            example: jPerez
-            description: The user's ID
-          password:
-            type: string
-            example: ASsda233F2!
-            description: The user's password
+        username:
+          type: string
+          example: jPerez
+          description: The user's ID
+        password:
+          type: string
+          example: ASsda233F2!
+          description: The user's password
   requestBodies:
     Patient:
       description: Patient object that will be added to the database

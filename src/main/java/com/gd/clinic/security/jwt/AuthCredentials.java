@@ -1,4 +1,4 @@
-package com.gd.clinic.config.security.jwt;
+package com.gd.clinic.security.jwt;
 
 import lombok.Data;
 
