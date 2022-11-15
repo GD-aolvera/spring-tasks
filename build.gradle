@@ -59,6 +59,9 @@ dependencies {
 configurations {
     all*.exclude module : 'spring-boot-starter-logging'
     all*.exclude module : 'logback-classic'
+
+	compileOnly "org.projectlombok:lombok"
+
 }
 
 tasks.named("test") {
