@@ -7,17 +7,21 @@ info:
 servers:
   - url: https://localhost:8080
 tags:
-  - name: Doctors
-    description: Available commands for doctors
-  - name: Nurses
-    description: Available commands for nurses
+  - name: Patients
+    description: Available commands relatied to patients
+  - name: Prescriptions
+    description: Available commands related to prescriptions
+  - name: Events
+    description: Available commands related to events
+  - name: Treatments
+    description: Available commands related to treatments
   - name: Admin
     description: Available commands for admin / auth
 paths:
   /treatments:
     get:
       tags:
-        - Doctors
+        - Treatments
       summary: Get all treatments
       description: ''
       operationId: getAllTreatments
@@ -29,12 +33,96 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Treatment'
+                  $ref: '#/components/schemas/TreatmentResponse'
+    post:
+      tags:
+        - Treatments
+      summary: Create treatment with given JSON
+      description: ''
+      operationId: addTreatment
+      requestBody:
+        description: Treatment JSON for new entry
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTreatment'
+      responses:
+        '200':
+          description: Treatment info successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TreatmentResponse'
+  /treatments/{treatmentID}:
+    get:
+      tags:
+        - Treatments
+      summary: Get treatment info for treatment with provided ID
+      description: ''
+      operationId: getTreatmentById
+      parameters:
+        - name: treatmentID
+          description: ID of the given treatment
+          in: path
+          required: true
+          schema:
+            type: string
+            example: UUID
+      responses:
+        '200':
+          description: Treatment info successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TreatmentResponse'
+    put:
+      tags:
+        - Treatments
+      summary: Modify treatment with provided ID, replace with given JSON
+      description: ''
+      operationId: modifyTreatment
+      parameters:
+        - name: treatmentID
+          description: ID of the given treatment
+          in: path
+          required: true
+          schema:
+            type: string
+            example: UUID
+      requestBody:
+        description: Treatment JSON that will replace the current entry
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTreatment'
+      responses:
+        '200':
+          description: Treatment info successfully fetched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TreatmentResponse'
+    delete:
+      tags:
+        - Treatments
+      summary: Delete treatment with provided ID
+      description: ''
+      operationId: deleteTreatment
+      parameters:
+        - name: treatmentID
+          description: ID of the given treatment
+          in: path
+          required: true
+          schema:
+            type: string
+            example: UUID
+      responses:
+        '200':
+          description: Treatment successfuly deleted
   /patients:
     get:
       tags:
-        - Doctors
-        - Nurses
+        - Patients
       summary: Get all patient files
       description: ''
       operationId: getAllPatients
@@ -46,10 +134,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Patient'
+                  $ref: '#/components/schemas/PatientResponse'
     post:
       tags:
-        - Doctors
+        - Patients
       summary: Add a patient
       description: Adds provided patient to database
       operationId: addPatient
@@ -65,12 +153,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Patient'
+                $ref: '#/components/schemas/PatientResponse'
   /patients/{patientId}:
     get:
       tags:
-        - Doctors
-        - Nurses
+        - Patients
       summary: Get patient file with the given ID
       description: ''
       operationId: getPatient
@@ -88,10 +175,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Patient'
+                $ref: '#/components/schemas/PatientResponse'
     put:
       tags:
-        - Doctors
+        - Patients
       summary: Edit patient file of the given ID
       description: ''
       operationId: editPatient
@@ -116,10 +203,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Patient'
-    delete:
+                $ref: '#/components/schemas/PatientResponse'
+  /patients/{patientId}/discharge:
+    put:
       tags:
-        - Doctors
+        - Patients
       summary: Discharge a patient by given ID
       description: Deletes any prescriptions under the given insurance number, subsequently all related events.
       operationId: dischargePatientByInsurance
@@ -134,11 +222,14 @@ paths:
       responses:
         '200':
           description: Successfully discharged patient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatientResponse'
   /patients/{patientId}/events:
     get:
       tags:
-        - Doctors
-        - Nurses
+        - Events
       summary: Get all events for a patient with given ID
       description: ''
       operationId: getAllEventsFor
@@ -158,12 +249,11 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Event'
+                  $ref: '#/components/schemas/EventResponse'
   /patients/{patientId}/prescriptions:
     get:
       tags:
-        - Doctors
-        - Nurses
+        - Prescriptions
       summary: Get prescriptions for the patient with the given ID
       description: ''
       operationId: getPrescriptionsOf
@@ -183,10 +273,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Prescription'
+                  $ref: '#/components/schemas/PrescriptionResponse'
     post:
       tags:
-        - Doctors
+        - Prescriptions
       summary: Prescribe procedures or medication
       description: Prescription is for the patient
       operationId: createPrescription
@@ -210,12 +300,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Prescription'
+                $ref: '#/components/schemas/PrescriptionResponse'
   /prescriptions/{prescriptionId}:
     get:
       tags:
-        - Doctors
-        - Nurses
+        - Prescriptions
       summary: Get prescription info of given prescription ID
       description: ''
       operationId: getPrescription
@@ -233,10 +322,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Prescription'
+                $ref: '#/components/schemas/PrescriptionResponse'
     put:
       tags:
-        - Doctors
+        - Prescriptions
       summary: Modify a given prescription
       description: Edit prescription (appointment) by ID, prescription parameter and its value
       operationId: modifyPrescription
@@ -260,10 +349,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Prescription'
+                $ref: '#/components/schemas/PrescriptionResponse'
     delete:
       tags:
-        - Doctors
+        - Prescriptions
       summary: Delete the given ID's prescription
       description: ''
       operationId: deletePrescriptionById
@@ -279,10 +368,30 @@ paths:
         '200':
           description: Prescription successfully removed
   /events/{eventId}:
+    get:
+      tags:
+        - Events
+      summary: Get event info for event with given ID
+      description: ''
+      operationId: getEventById
+      parameters:
+        - name: eventId
+          in: path
+          description: Unique event ID of the event that will be modified
+          required: true
+          schema:
+            type: string
+            example: UUID
+      responses:
+        '200':
+          description: Operation Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
     put:
       tags:
-        - Doctors
-        - Nurses
+        - Events
       summary: Modify an event's parameters
       description: ''
       operationId: modEvent
@@ -306,11 +415,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Event'
+                $ref: '#/components/schemas/EventResponse'
   /events/{eventId}/cancel:
     put:
       tags:
-        - Nurses
+        - Events
       summary: Cancel given event
       description: ''
       operationId: cancelEvent
@@ -370,7 +479,7 @@ paths:
           description: Auth token in response header -> "authorization:"
 components:
   schemas:
-    Patient:
+    PatientResponse:
       type: object
       properties:
         id:
@@ -409,9 +518,8 @@ components:
           description: Patient's diagnosis
           example: Tuberculosis
         insuranceNumber:
-          type: integer
-          format: int64
-          example: 08323
+          type: string
+          example: "A0123331"
         doctorId:
           type: string
           example: UUID
@@ -439,7 +547,7 @@ components:
           format: int64
           example: 5
           description: Duration of the treatment in days
-    Prescription:
+    PrescriptionResponse:
       type: object
       properties:
         id:
@@ -484,7 +592,7 @@ components:
           enum:
             - Scheduled
             - Done
-    Event:
+    EventResponse:
       type: object
       properties:
         id:
@@ -516,7 +624,21 @@ components:
           description: Reason for cancelling the event
           example: Doctor's orders
           default: n/a
-    Treatment:
+    NewTreatment:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Colonoscopy
+          description: Name of procedure/medicine
+        type:
+          type: string
+          description: Whether the treatment is a procedure or a medicine
+          example: Procedure
+          enum:
+            - Procedure
+            - Medicine
+    TreatmentResponse:
       type: object
       properties:
         id:
@@ -555,11 +677,13 @@ components:
           example: ao12!B45
           description: The user's password
         role:
-          type: array
-          items:
-            type: string
-          example: [admin, doctor]
+          type: string
+          example: "admin"
           description: User's authorization level
+          enum:
+            - admin
+            - doctor
+            - nurse
     UserResponse:
       properties:
         id:
@@ -592,11 +716,13 @@ components:
           example: "drDooLittle"
           description: Username of this user's creator
         role:
-          type: array
-          items:
-            type: string
-          example: [admin, doctor]
+          type: string
+          example: "doctor"
           description: User's authorization level
+          enum:
+            - admin
+            - doctor
+            - nurse
     Credentials:
       properties:
         username:
@@ -608,9 +734,9 @@ components:
           example: ASsda233F2!
           description: The user's password
   requestBodies:
-    Patient:
+    NewPatient:
       description: Patient object that will be added to the database
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Patient'
+            $ref: '#/components/schemas/NewPatient'
