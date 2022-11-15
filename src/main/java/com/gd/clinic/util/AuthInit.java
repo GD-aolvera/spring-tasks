@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -31,7 +32,7 @@ public class AuthInit implements CommandLineRunner {
         Role roleAdmin = new Role(RoleName.ROLE_ADMIN);
         Role roleDoctor = new Role(RoleName.ROLE_DOCTOR);
         Role roleNurse = new Role(RoleName.ROLE_NURSE);
-        User initAdmin = new User("Arturo", "Olvera", "aolvera", "$2a$12$yccM2.hINPSDFmHkRatOKu3bY2ayZD3c33bs2jxkOm2r6qHQ7waS2");
+        User initAdmin = new User("Super", "User", "admin", new BCryptPasswordEncoder().encode("admin"));
         Set<Role> initAdminRoles = new HashSet<>();
         roleService.save(roleAdmin);
         roleService.save(roleDoctor);
