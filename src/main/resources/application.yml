@@ -11,3 +11,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
+jwt:
+  expiration: 60000
+  secret: mySecret
+  refreshToken:
+    expiration: 120
+
+

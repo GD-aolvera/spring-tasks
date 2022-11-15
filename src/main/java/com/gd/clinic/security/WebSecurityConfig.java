@@ -1,5 +1,6 @@
 package com.gd.clinic.security;
 
+import com.gd.clinic.security.application.RefreshTokenService;
 import com.gd.clinic.security.jwt.JWTAuthenticationFilter;
 import com.gd.clinic.security.jwt.JWTAuthorizationFilter;
 import com.gd.clinic.security.service.UserDetailServiceImpl;
@@ -30,13 +31,17 @@ public class WebSecurityConfig {
 
     @Autowired
     private final UserDetailServiceImpl userDetailsService;
+
     @Autowired
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
+
+    RefreshTokenService refreshTokenService;
+
 
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
-        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter();
+        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(refreshTokenService);
         jwtAuthenticationFilter.setAuthenticationManager(authManager);
         jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
@@ -85,4 +90,7 @@ public class WebSecurityConfig {
 
     @Bean
     UserDetailsService setUserDetailsServiceFactoryBean(){return new UserDetailServiceImpl();}
+
+
 }
+
