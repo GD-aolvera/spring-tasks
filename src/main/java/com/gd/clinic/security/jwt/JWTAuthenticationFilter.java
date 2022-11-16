@@ -1,8 +1,9 @@
 package com.gd.clinic.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gd.clinic.security.application.RefreshTokenService;
-import com.gd.clinic.security.entity.UserMain;
+import com.gd.clinic.model.JwtResponseDto;
+import com.gd.clinic.security.service.RefreshTokenService;
+import com.gd.clinic.security.service.UserMain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,15 +19,14 @@ import java.io.PrintWriter;
 import java.util.Collections;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
     @Autowired
     private final RefreshTokenService refreshTokenService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public JWTAuthenticationFilter(RefreshTokenService refreshTokenService) {
         this.refreshTokenService = refreshTokenService;
     }
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -43,14 +43,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         UserMain userDetails = (UserMain) authResult.getPrincipal();
         String token = TokenUtils.createToken(userDetails.getUsername(), userDetails.getName());
-        //var user = userService.getByUserName(userDetails.getUsername());
         String refreshToken = refreshTokenService.createToken(userDetails.getUser());
         PrintWriter writer = response.getWriter();
         response.addHeader("Authorization", "Bearer " + token);
         response.setHeader("RefreshToken",refreshToken);
         response.setHeader("Content-Type", "text/plain");
-        response.getWriter().write(objectMapper.writeValueAsString(JwtResponseDto.of(token, refreshToken)));
-        response.getWriter().flush();
+        writer.write(objectMapper.writeValueAsString(new JwtResponseDto(token, refreshToken)));
+        writer.flush();
         super.successfulAuthentication(request, response, chain, authResult);
     }
 

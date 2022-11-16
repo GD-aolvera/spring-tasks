@@ -1,6 +1,6 @@
-package com.gd.clinic.security;
+package com.gd.clinic.config;
 
-import com.gd.clinic.security.application.RefreshTokenService;
+import com.gd.clinic.security.service.RefreshTokenService;
 import com.gd.clinic.security.jwt.JWTAuthenticationFilter;
 import com.gd.clinic.security.jwt.JWTAuthorizationFilter;
 import com.gd.clinic.security.service.UserDetailServiceImpl;

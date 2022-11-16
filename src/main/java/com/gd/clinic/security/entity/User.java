@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -41,9 +39,7 @@ public class User {
     @NonNull
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "userId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
-    private Set<Role> role = new HashSet<>();
+    private String role;
 
     private OffsetDateTime createdAt;
 

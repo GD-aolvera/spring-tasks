@@ -1,11 +1,10 @@
-package com.gd.clinic.security.application;
+package com.gd.clinic.security.service;
 
-import com.gd.clinic.security.application.port.RefreshTokenRepository;
+import com.gd.clinic.security.repository.RefreshTokenRepository;
 import com.gd.clinic.security.entity.RefreshToken;
 import com.gd.clinic.security.entity.User;
-import com.gd.clinic.security.jwt.JwtRefreshRequestDto;
-import com.gd.clinic.security.jwt.JwtResponseDto;
-import com.gd.clinic.security.jwt.TokenUtils;
+import com.gd.clinic.model.JwtRefreshRequestDto;
+import com.gd.clinic.model.JwtResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import java.util.UUID;
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-   // private final TokenUtils jwtUtils;
 
     @Value("${jwt.refreshToken.expiration}")
     private int expiration;
@@ -45,7 +43,7 @@ public class RefreshTokenService {
         }
         String jwt = createToken(token.getUser());
         updateToken(token);
-        return JwtResponseDto.of(jwt, token.getToken());
+        return new JwtResponseDto(jwt, token.getToken());
     }
 
     private void updateToken(RefreshToken token) {

@@ -1,4 +1,4 @@
-package com.gd.clinic.security.application.port;
+package com.gd.clinic.security.repository;
 
 import com.gd.clinic.security.entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,11 +1,7 @@
 package com.gd.clinic;
 
-import com.gd.clinic.security.entity.User;
-import com.gd.clinic.security.repository.UserRepo;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class

@@ -15,6 +15,7 @@ import java.util.UUID;
 @Data
 @Entity
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Type(type = "uuid-char")
@@ -22,4 +23,5 @@ public class Role {
     @NonNull
     @Enumerated(EnumType.STRING)
     private RoleName roleName;
+
 }

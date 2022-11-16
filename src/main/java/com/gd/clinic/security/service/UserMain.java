@@ -1,18 +1,20 @@
-package com.gd.clinic.security.entity;
+package com.gd.clinic.security.service;
 
+import com.gd.clinic.security.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
 public class UserMain implements UserDetails {
+
     private String firstName;
     private String lastName;
     private String userName;
@@ -22,13 +24,16 @@ public class UserMain implements UserDetails {
     private User user;
 
     public static UserMain build(User user){
-        List<GrantedAuthority> authorityList = user.getRole().stream().map(role -> new SimpleGrantedAuthority(role.getRoleName().name())).collect(Collectors.toList());
+        List<GrantedAuthority> authorityList = new ArrayList<>();
+        authorityList.add(new SimpleGrantedAuthority(user.getRole()));
         return new UserMain(user.getFirstName(), user.getLastName(), user.getUserName(), user.getPassword(), authorityList, user);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRole().stream().map(role -> new SimpleGrantedAuthority(role.getRoleName().toString())).collect(Collectors.toList());
+        List<GrantedAuthority> authorityList = new ArrayList<>();
+        authorityList.add(new SimpleGrantedAuthority(user.getRole()));
+        return authorityList;
     }
 
     @Override
@@ -60,6 +65,7 @@ public class UserMain implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     public String getName(){
         return user.getFirstName() + " " + user.getLastName();
     }

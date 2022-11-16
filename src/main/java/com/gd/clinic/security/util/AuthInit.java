@@ -1,8 +1,8 @@
-package com.gd.clinic.util;
+package com.gd.clinic.security.util;
 
 import com.gd.clinic.security.entity.Role;
 import com.gd.clinic.security.entity.User;
-import com.gd.clinic.security.entity.UserMain;
+import com.gd.clinic.security.service.UserMain;
 import com.gd.clinic.security.enums.RoleName;
 import com.gd.clinic.security.service.RoleService;
 import com.gd.clinic.security.service.UserDetailServiceImpl;
@@ -13,10 +13,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 public class AuthInit implements CommandLineRunner {
@@ -33,13 +31,12 @@ public class AuthInit implements CommandLineRunner {
         Role roleDoctor = new Role(RoleName.ROLE_DOCTOR);
         Role roleNurse = new Role(RoleName.ROLE_NURSE);
         User initAdmin = new User("Super", "User", "admin", new BCryptPasswordEncoder().encode("admin"));
-        Set<Role> initAdminRoles = new HashSet<>();
         roleService.save(roleAdmin);
         roleService.save(roleDoctor);
         roleService.save(roleNurse);
-        initAdminRoles.add(roleAdmin);
-        initAdmin.setRole(initAdminRoles);
-        List<GrantedAuthority> authorityList = initAdmin.getRole().stream().map(role -> new SimpleGrantedAuthority(role.getRoleName().name())).collect(Collectors.toList());
+        initAdmin.setRole(RoleName.ROLE_ADMIN.name());
+        List<GrantedAuthority> authorityList = new ArrayList<>();
+        authorityList.add(new SimpleGrantedAuthority(initAdmin.getRole()));
         UserMain.build(initAdmin);
         UserMain.build(initAdmin).setAuthorities(authorityList);
         userService.save(initAdmin);

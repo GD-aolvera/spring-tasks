@@ -1,7 +1,6 @@
 package com.gd.clinic.security.service;
 
 import com.gd.clinic.security.entity.User;
-import com.gd.clinic.security.entity.UserMain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

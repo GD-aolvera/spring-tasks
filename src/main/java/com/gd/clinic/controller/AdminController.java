@@ -1,12 +1,10 @@
 package com.gd.clinic.controller;
 
 import com.gd.clinic.api.AdminApi;
-import com.gd.clinic.security.entity.Role;
+import com.gd.clinic.model.*;
 import com.gd.clinic.security.entity.User;
-import com.gd.clinic.model.CredentialsDto;
-import com.gd.clinic.model.NewUserDto;
-import com.gd.clinic.model.UserResponseDto;
 import com.gd.clinic.security.enums.RoleName;
+import com.gd.clinic.security.service.RefreshTokenService;
 import com.gd.clinic.security.service.RoleService;
 import com.gd.clinic.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @RestController
 public class AdminController implements AdminApi {
@@ -30,23 +26,24 @@ public class AdminController implements AdminApi {
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    RefreshTokenService refreshTokenService;
+
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDto> createUser(NewUserDto newUserDto) {
-        Set<Role> roles = new HashSet<>();
+        String role = "";
         User user = configUser(newUserDto);
         if(userService.existsByUsername(newUserDto.getUserName())){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        for (String role: newUserDto.getRole()) {
-            switch (role){
-                case "admin" -> roles.add(roleService.getByRoleName(RoleName.ROLE_ADMIN).get());
-                case "nurse" -> roles.add(roleService.getByRoleName(RoleName.ROLE_NURSE).get());
-                case "doctor" -> roles.add(roleService.getByRoleName(RoleName.ROLE_DOCTOR).get());
-            }
+        switch (newUserDto.getRole()) {
+            case ADMIN -> role =  roleService.getByRoleName(RoleName.ROLE_ADMIN).get().getRoleName().name();
+            case NURSE -> role =  roleService.getByRoleName(RoleName.ROLE_NURSE).get().getRoleName().name();
+            case DOCTOR -> role = roleService.getByRoleName(RoleName.ROLE_DOCTOR).get().getRoleName().name();
         }
-        user.setRole(roles);
+        user.setRole(role);
         userService.save(user);
         return ResponseEntity.ok(configUserResponse(userService.getByUserName(newUserDto.getUserName()).get()));
     }
@@ -54,6 +51,11 @@ public class AdminController implements AdminApi {
     @Override
     public ResponseEntity<Void> login(CredentialsDto credentialsDto) {
         return null;
+    }
+
+    @Override
+    public ResponseEntity<JwtResponseDto> tokenRefresh(JwtRefreshRequestDto jwtRefreshRequestDto) {
+        return ResponseEntity.ok(refreshTokenService.refreshToken(jwtRefreshRequestDto));
     }
 
 
@@ -71,7 +73,7 @@ public class AdminController implements AdminApi {
         response.setLastName(user.getLastName());
         response.setUserName(user.getUserName());
         response.setPassword(user.getPassword());
-        response.setRole(user.getRole().stream().map(role -> role.getRoleName().name()).collect(Collectors.toList()));
+        response.setRole(UserResponseDto.RoleEnum.fromValue(user.getRole().substring(5).toLowerCase()));
         response.setCreatedAt(user.getCreatedAt());
         response.setCreatedBy(user.getCreatedBy());
         return response;

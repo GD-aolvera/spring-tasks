@@ -1,12 +1,13 @@
 package com.gd.clinic.security.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-@EqualsAndHashCode(of = "uuid")
+@EqualsAndHashCode(of = "id")
 @Getter
 @Setter
 @Builder
@@ -16,11 +17,9 @@ import java.util.UUID;
 public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Builder.Default
-    private String uuid = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Type(type = "uuid-char")
+    private UUID id;
 
     @Column
     private String token;
