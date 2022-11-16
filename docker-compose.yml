@@ -1,11 +1,9 @@
 version: "3.7"
+
 services:
   backend:
-    container_name:  namecontainer
-    image:  imagedocker
+    container_name: medical-clinic
+    image: medical-clinic
     ports:
       - "8080:8080"
     restart: unless-stopped
-networks:
-  your-network:
-    driver: bridge
