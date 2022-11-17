@@ -495,7 +495,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JwtResponse'
+                $ref: '#/components/schemas/JwtResponse'                
 components:
   schemas:
     PatientResponse:

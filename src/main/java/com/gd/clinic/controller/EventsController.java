@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+
 @PreAuthorize("hasAnyRole('DOCTOR', 'NURSE')")
 @RestController
 public class EventsController implements EventsApi {
@@ -32,4 +33,5 @@ public class EventsController implements EventsApi {
     public ResponseEntity<EventResponseDto> modEvent(String eventId, NewEventDto newEventDto) {
         return null;
     }
+
 }

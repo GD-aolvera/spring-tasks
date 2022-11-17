@@ -41,4 +41,5 @@ public class PatientsController implements PatientsApi {
     public ResponseEntity<PatientResponseDto> getPatient(String patientId) {
         return null;
     }
+
 }
