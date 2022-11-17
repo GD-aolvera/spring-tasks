@@ -19,5 +19,3 @@ jwt:
   secret: mySecret
   refreshToken:
     expiration: 120
-
-
