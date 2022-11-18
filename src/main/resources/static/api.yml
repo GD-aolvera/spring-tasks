@@ -484,7 +484,8 @@ components:
       properties:
         id:
           type: string
-          example: UUID
+          format: uuid
+          example: UUID generated for this patient in the Patients table
         name:
           type: string
           description: Name of the patient
@@ -498,14 +499,15 @@ components:
           example: AO8323
         doctorId:
           type: string
-          description: UUID
+          format: uuid
+          description: Doctors table UUID corresponding to the patient's assigned doctor
         status:
           type: string
           description: patient's treatment progress
           example: In treatment
           enum:
             - In treatment
-            - recovered
+            - Recovered
     NewPatient:
       type: object
       properties:
@@ -522,15 +524,16 @@ components:
           example: "A0123331"
         doctorId:
           type: string
+          format: uuid
           example: UUID
-          description: doctor's id in doctor catalogue
+          description: Doctors table UUID corresponding to the patient's assigned doctor
         status:
           type: string
           description: patient's treatment progress
           example: In treatment
           enum:
             - In treatment
-            - recovered
+            - Recovered
     NewPrescription:
       type: object
       properties:
