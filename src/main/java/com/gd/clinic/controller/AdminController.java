@@ -7,6 +7,7 @@ import com.gd.clinic.security.enums.RoleName;
 import com.gd.clinic.security.service.RefreshTokenService;
 import com.gd.clinic.security.service.RoleService;
 import com.gd.clinic.security.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +20,13 @@ import java.time.OffsetDateTime;
 
 
 @RestController
+@RequiredArgsConstructor
 public class AdminController implements AdminApi {
 
-    @Autowired
-    UserService userService;
-    @Autowired
-    RoleService roleService;
+    final UserService userService;
+    final RoleService roleService;
 
-    @Autowired
-    RefreshTokenService refreshTokenService;
+    final RefreshTokenService refreshTokenService;
 
 
     @Override

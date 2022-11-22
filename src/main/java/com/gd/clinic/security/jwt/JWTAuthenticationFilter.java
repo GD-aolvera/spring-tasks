@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gd.clinic.model.JwtResponseDto;
 import com.gd.clinic.security.service.RefreshTokenService;
 import com.gd.clinic.security.service.UserMain;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,10 +19,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collections;
 
+
+@RequiredArgsConstructor
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    @Autowired
-    private final RefreshTokenService refreshTokenService;
+    private RefreshTokenService refreshTokenService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public JWTAuthenticationFilter(RefreshTokenService refreshTokenService) {

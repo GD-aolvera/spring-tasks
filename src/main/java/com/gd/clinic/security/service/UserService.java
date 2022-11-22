@@ -2,6 +2,7 @@ package com.gd.clinic.security.service;
 
 import com.gd.clinic.security.entity.User;
 import com.gd.clinic.security.repository.UserRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,10 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepo userRepo;
+    final UserRepo userRepo;
 
     public Optional<User> getByUserName(String username){
         return userRepo.findOneByUserName(username);
