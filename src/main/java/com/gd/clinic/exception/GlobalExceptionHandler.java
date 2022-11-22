@@ -1,7 +1,6 @@
 package com.gd.clinic.exception;
 
 import com.gd.clinic.model.ErrorResponseDto;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
