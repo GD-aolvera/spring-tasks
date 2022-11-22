@@ -733,7 +733,7 @@ components:
           type: string
           example: ASsda233F2!
           description: The user's password
-    ErrorResponseDto:
+    ErrorResponse:
       type: object
       properties:
         status:
