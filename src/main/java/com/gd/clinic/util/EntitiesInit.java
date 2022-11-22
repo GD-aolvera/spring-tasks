@@ -21,8 +21,7 @@ public class EntitiesInit implements CommandLineRunner {
     PrescriptionRepository prescriptionRepository;
     @Autowired
     TreatmentRepository treatmentRepository;
-    @Autowired
-    DoctorRepository doctorRepository;
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -32,11 +31,9 @@ public class EntitiesInit implements CommandLineRunner {
         Event e = new Event(UUID.randomUUID(), UUID.randomUUID(), OffsetDateTime.now(), "Scheduled");
         Prescription pr = new Prescription(UUID.randomUUID(), UUID.randomUUID(), "Twice a week", 2);
         Treatment t = new Treatment("Tylenol", "Medicine");
-        Doctor d = new Doctor("Dr", "DoLittle");
         eventRepository.save(e);
         patientRepository.save(p);
         prescriptionRepository.save(pr);
         treatmentRepository.save(t);
-        doctorRepository.save(d);
     }
 }
