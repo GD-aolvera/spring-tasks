@@ -733,6 +733,17 @@ components:
           type: string
           example: ASsda233F2!
           description: The user's password
+    ErrorResponseDto:
+      type: object
+      properties:
+        status:
+          type: string
+          example: 404
+          description: the statuses indicate the issue, example 404 not found
+        message:
+          type: string
+          example: Object not found
+          description: error message
   requestBodies:
     NewPatient:
       description: Patient object that will be added to the database
