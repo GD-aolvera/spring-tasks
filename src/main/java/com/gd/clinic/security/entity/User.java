@@ -2,11 +2,8 @@ package com.gd.clinic.security.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.stereotype.Component;
-
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.Objects;

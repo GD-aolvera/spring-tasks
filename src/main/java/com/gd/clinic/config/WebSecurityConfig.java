@@ -70,7 +70,6 @@ public class WebSecurityConfig {
         return authProvider;
     }
 
-    @SneakyThrows
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();

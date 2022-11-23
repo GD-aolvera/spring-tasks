@@ -15,7 +15,7 @@ spring:
       ddl-auto: create
 
 jwt:
-  expiration: 60000
+  expiration: 1
   secret: mySecret
   refreshToken:
-    expiration: 120
+    expiration: 1

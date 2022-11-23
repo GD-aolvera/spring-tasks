@@ -3,9 +3,7 @@ package com.gd.clinic.security.service;
 import com.gd.clinic.security.entity.User;
 import com.gd.clinic.security.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.util.Optional;
 

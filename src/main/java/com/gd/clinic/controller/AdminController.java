@@ -5,7 +5,6 @@ import com.gd.clinic.model.*;
 import com.gd.clinic.security.entity.User;
 import com.gd.clinic.security.enums.RoleName;
 import com.gd.clinic.security.service.RefreshTokenService;
-import com.gd.clinic.security.service.RoleService;
 import com.gd.clinic.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import java.time.OffsetDateTime;
 public class AdminController implements AdminApi {
 
     final UserService userService;
-    final RoleService roleService;
     final RefreshTokenService refreshTokenService;
 
     @Override
@@ -35,10 +33,12 @@ public class AdminController implements AdminApi {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         switch (newUserDto.getRole()) {
-            case ADMIN -> role = roleService.getByRoleName(RoleName.ROLE_ADMIN).get().getRoleName().name();
-            case NURSE -> role = roleService.getByRoleName(RoleName.ROLE_NURSE).get().getRoleName().name();
-            case DOCTOR -> role = roleService.getByRoleName(RoleName.ROLE_DOCTOR).get().getRoleName().name();
+            case ADMIN -> role = RoleName.ROLE_ADMIN.name();
+            case NURSE -> role = RoleName.ROLE_NURSE.name();
+            case DOCTOR -> role = RoleName.ROLE_DOCTOR.name();
+
         }
+
         user.setRole(role);
         userService.save(user);
         return ResponseEntity.ok(configUserResponse(userService.getByUserName(newUserDto.getUserName()).get()));

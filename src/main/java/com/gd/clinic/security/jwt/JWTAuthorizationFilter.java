@@ -2,11 +2,9 @@ package com.gd.clinic.security.jwt;
 
 import com.gd.clinic.security.service.UserDetailServiceImpl;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -39,7 +37,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                     .getBody();
             UsernamePasswordAuthenticationToken usernamePAT = TokenUtils.getAuthentication(token, userDetailService.loadUserByUsername(claims.getSubject()));
             SecurityContextHolder.getContext().setAuthentication(usernamePAT);
-            System.out.println(SecurityContextHolder.getContext());
         }
         filterChain.doFilter(request, response);
     }

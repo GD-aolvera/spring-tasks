@@ -8,7 +8,6 @@ import com.gd.clinic.model.JwtResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
@@ -32,7 +31,7 @@ public class RefreshTokenService {
     }
 
     public JwtResponseDto refreshToken(JwtRefreshRequestDto refreshRequestDto) {
-        var tokenOpt = refreshTokenRepository.findRefreshTokenByToken(refreshRequestDto.getRefreshToken());
+        var tokenOpt = refreshTokenRepository.findByToken(refreshRequestDto.getRefreshToken());
         if (tokenOpt.isEmpty()) {
             throw new RuntimeException("Refresh Token %s not found!".formatted(refreshRequestDto.getRefreshToken()));
         }
