@@ -1,7 +1,19 @@
 spring:
   datasource:
-    username: yourusername
+    driver-class-name: org.postrgresql.Driver
+    username: admin
     url: jdbc:postgresql://localhost:5432/
-    password: yourpassword
+    password: admin
+  jpa:
+    properties:
+      javax:
+        persistence:
+          schema-generation:
+            scripts:
+              create-target: classpath:db/changelog/sql/init.sql
+      temp:
+        use_jdbc_metadata_defaults: 'false'
+    database-platform:
+      org.hibernate.dialect.PostgreSQL9Dialect
   liquibase:
     change-log: classpath:db/changelog/changelog.yml

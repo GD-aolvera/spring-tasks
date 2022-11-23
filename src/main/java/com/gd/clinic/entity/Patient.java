@@ -3,8 +3,6 @@ package com.gd.clinic.entity;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
-// TODO: Uncomment once security has been merged to this branch or vice versa
-//import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -42,8 +40,7 @@ public class Patient{
 
     private OffsetDateTime createdAt = OffsetDateTime.now();
 
-    //TODO: Uncomment once branch "security" has been merged to this branch or vice versa
-    private String createdBy/*=getCurrentUser()*/;
+    private String createdBy;
 
 
     @Override
@@ -58,9 +55,5 @@ public class Patient{
     public int hashCode() {
         return getClass().hashCode();
     }
-    //TODO: Uncomment once branch "security" has been merged to this branch or vice versa
-   /* private String getCurrentUser() {
-        String prince = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        return prince.substring(prince.indexOf("userName=") + 9, prince.indexOf(", pass"));
-    } */
+
 }

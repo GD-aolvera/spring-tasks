@@ -7,8 +7,4 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface EventRepository extends JpaRepository<Event, UUID> {
-
-    @Override
-    Optional<Event> findById(UUID id);
-
 }
