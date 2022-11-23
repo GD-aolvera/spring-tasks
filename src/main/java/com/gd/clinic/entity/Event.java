@@ -1,4 +1,4 @@
-package com.gd.clinic.entities;
+package com.gd.clinic.entity;
 
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @Entity
-@Table(name = "Events")
+@Table(name = "events")
 public class Event {
 
     @Id
@@ -33,7 +33,7 @@ public class Event {
     private OffsetDateTime dateTime;
 
     @NonNull
-    private String status;
+    private Enum status;
 
     private String cancelReason;
 }

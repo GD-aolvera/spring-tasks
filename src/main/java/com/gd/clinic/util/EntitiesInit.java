@@ -1,6 +1,7 @@
 package com.gd.clinic.util;
 
-import com.gd.clinic.entities.*;
+import com.gd.clinic.entity.*;
+import com.gd.clinic.model.EventResponseDto;
 import com.gd.clinic.model.PatientResponseDto;
 import com.gd.clinic.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class EntitiesInit implements CommandLineRunner {
         Patient p = new Patient("John", "Cancer", "ASD12345");
         p.setStatus(PatientResponseDto.StatusEnum.RECOVERED.getValue());
         p.setDoctorId(UUID.randomUUID());
-        Event e = new Event(UUID.randomUUID(), UUID.randomUUID(), OffsetDateTime.now(), "Scheduled");
+        Event e = new Event(UUID.randomUUID(), UUID.randomUUID(), OffsetDateTime.now(), EventResponseDto.StatusEnum.SCHEDULED);
         Prescription pr = new Prescription(UUID.randomUUID(), UUID.randomUUID(), "Twice a week", 2);
         Treatment t = new Treatment("Tylenol", "Medicine");
         eventRepository.save(e);

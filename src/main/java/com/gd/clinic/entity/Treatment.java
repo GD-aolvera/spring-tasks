@@ -1,4 +1,4 @@
-package com.gd.clinic.entities;
+package com.gd.clinic.entity;
 
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @Entity
-@Table(name = "Treatments")
+@Table(name = "treatments")
 public class Treatment {
 
     @Id

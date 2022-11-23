@@ -1,4 +1,4 @@
-package com.gd.clinic.entities;
+package com.gd.clinic.entity;
 
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @Entity
-@Table(name = "Prescriptions")
+@Table(name = "prescriptions")
 public class Prescription {
 
     @Id
@@ -30,11 +30,11 @@ public class Prescription {
     private UUID treatmentId;
 
     @NonNull
-    String timePattern;
+    private String timePattern;
 
     @NonNull
-    Integer period;
+    private Integer period;
 
-    OffsetDateTime datePrescribed = OffsetDateTime.now();
+    private OffsetDateTime datePrescribed;
 
 }
