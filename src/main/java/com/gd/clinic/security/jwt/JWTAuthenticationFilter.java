@@ -35,10 +35,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         AuthCredentials authCredentials = new AuthCredentials();
         try {
             authCredentials = new ObjectMapper().readValue(request.getReader(), AuthCredentials.class);
-        } catch (IOException ignored){
+        } catch (IOException ignored) {
         }
-        UsernamePasswordAuthenticationToken usernamePAT = new UsernamePasswordAuthenticationToken(authCredentials.getUsername(), authCredentials.getPassword(), Collections.emptyList());
-        return getAuthenticationManager().authenticate(usernamePAT);
+        UsernamePasswordAuthenticationToken userToken = new UsernamePasswordAuthenticationToken(authCredentials.getUsername(), authCredentials.getPassword(), Collections.emptyList());
+        return getAuthenticationManager().authenticate(userToken);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String refreshToken = refreshTokenService.createToken(userDetails.getUser());
         PrintWriter writer = response.getWriter();
         response.addHeader("Authorization", "Bearer " + token);
-        response.setHeader("RefreshToken",refreshToken);
+        response.setHeader("RefreshToken", refreshToken);
         response.setHeader("Content-Type", "text/plain");
         writer.write(objectMapper.writeValueAsString(new JwtResponseDto(token, refreshToken)));
         writer.flush();

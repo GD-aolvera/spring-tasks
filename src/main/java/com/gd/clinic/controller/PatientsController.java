@@ -12,6 +12,7 @@ import java.util.List;
 @RestController
 public class PatientsController implements PatientsApi {
 
+
     @PreAuthorize("hasRole('DOCTOR')")
     @Override
     public ResponseEntity<PatientResponseDto> addPatient(NewPatientDto newPatientDto) {

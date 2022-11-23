@@ -70,3 +70,4 @@ public class UserMain implements UserDetails {
         return user.getFirstName() + " " + user.getLastName();
     }
 }
+

@@ -28,16 +28,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
-
-    @Autowired
     private final UserDetailServiceImpl userDetailsService;
-
-    @Autowired
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
-
-    RefreshTokenService refreshTokenService;
-
-
+    final RefreshTokenService refreshTokenService;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
@@ -51,11 +44,11 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers(
                         "/swagger-ui/**",
-                                    "/swagger/resources/**",
-                                    "/configuration/**",
-                                    "/v3/api-docs/**",
-                                    "/auth/login/**",
-                                    "/h2-console/**"
+                        "/swagger/resources/**",
+                        "/configuration/**",
+                        "/v3/api-docs/**",
+                        "/auth/login/**",
+                        "/h2-console/**"
                 ).permitAll()
                 .anyRequest()
                 .authenticated()
@@ -79,18 +72,17 @@ public class WebSecurityConfig {
 
     @SneakyThrows
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception{
-        return  authConfig.getAuthenticationManager();
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-   // @Bean
-  //  UserDetailsService setUserDetailsServiceFactoryBean(){return new UserDetailServiceImpl();}
-
+    // @Bean
+    //  UserDetailsService setUserDetailsServiceFactoryBean(){return new UserDetailServiceImpl();}
 
 }
 

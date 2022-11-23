@@ -8,7 +8,6 @@ import com.gd.clinic.security.service.RefreshTokenService;
 import com.gd.clinic.security.service.RoleService;
 import com.gd.clinic.security.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,21 +24,19 @@ public class AdminController implements AdminApi {
 
     final UserService userService;
     final RoleService roleService;
-
     final RefreshTokenService refreshTokenService;
-
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDto> createUser(NewUserDto newUserDto) {
         String role = "";
         User user = configUser(newUserDto);
-        if(userService.existsByUsername(newUserDto.getUserName())){
+        if (userService.existsByUsername(newUserDto.getUserName())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         switch (newUserDto.getRole()) {
-            case ADMIN -> role =  roleService.getByRoleName(RoleName.ROLE_ADMIN).get().getRoleName().name();
-            case NURSE -> role =  roleService.getByRoleName(RoleName.ROLE_NURSE).get().getRoleName().name();
+            case ADMIN -> role = roleService.getByRoleName(RoleName.ROLE_ADMIN).get().getRoleName().name();
+            case NURSE -> role = roleService.getByRoleName(RoleName.ROLE_NURSE).get().getRoleName().name();
             case DOCTOR -> role = roleService.getByRoleName(RoleName.ROLE_DOCTOR).get().getRoleName().name();
         }
         user.setRole(role);
@@ -57,15 +54,14 @@ public class AdminController implements AdminApi {
         return ResponseEntity.ok(refreshTokenService.refreshToken(jwtRefreshRequestDto));
     }
 
-
-    private User configUser(NewUserDto newUserDto){
+    private User configUser(NewUserDto newUserDto) {
         User user = new User(newUserDto.getFirstName(), newUserDto.getLastName(), newUserDto.getUserName(), new BCryptPasswordEncoder().encode(newUserDto.getPassword()));
         user.setCreatedAt(OffsetDateTime.now());
         user.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         return user;
     }
 
-    private UserResponseDto configUserResponse(User user){
+    private UserResponseDto configUserResponse(User user) {
         UserResponseDto response = new UserResponseDto();
         response.setId(user.getId().toString());
         response.setFirstName(user.getFirstName());
@@ -77,5 +73,4 @@ public class AdminController implements AdminApi {
         response.setCreatedBy(user.getCreatedBy());
         return response;
     }
-    
 }
