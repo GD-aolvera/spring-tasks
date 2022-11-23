@@ -3,6 +3,7 @@ buildscript {
 		openApiVersion = "1.6.12"
 		openApiGeneratorVersion = "6.2.1"
 		springVersion = "2.7.5"
+		postgresVersion = "42.5.0"
 	}
 	repositories {
 		mavenLocal()
@@ -45,7 +46,7 @@ dependencies {
 
 	compileOnly "org.projectlombok:lombok"
 
-	runtimeOnly 'com.h2database:h2'
+	runtimeOnly "org.postgresql:postgresql:${postgresVersion}"
 
 	annotationProcessor "org.projectlombok:lombok"
 

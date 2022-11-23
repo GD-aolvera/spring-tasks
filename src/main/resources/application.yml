@@ -1,19 +1,23 @@
 spring:
   datasource:
-    driver-class-name: org.postrgresql.Driver
+    driver-class-name: org.postgresql.Driver
     username: admin
-    url: jdbc:postgresql://localhost:5432/
+    url: jdbc:postgresql://localhost:5432/hospitaldb
     password: admin
   jpa:
+    hibernate:
+        ddl-auto: create-drop
     properties:
       javax:
         persistence:
           schema-generation:
+            create-source: metadata
             scripts:
-              create-target: classpath:db/changelog/sql/init.sql
-      temp:
-        use_jdbc_metadata_defaults: 'false'
+              action: create
+              create-target: src/main/resources/db/changelog/sql/schema.sql
     database-platform:
       org.hibernate.dialect.PostgreSQL9Dialect
   liquibase:
     change-log: classpath:db/changelog/changelog.yml
+
+

@@ -4,6 +4,8 @@ import com.gd.clinic.entity.*;
 import com.gd.clinic.model.EventResponseDto;
 import com.gd.clinic.model.PatientResponseDto;
 import com.gd.clinic.repository.*;
+import com.gd.clinic.service.PatientService;
+import com.gd.clinic.service.PrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -15,11 +17,11 @@ import java.util.UUID;
 public class EntitiesInit implements CommandLineRunner {
 
     @Autowired
-    PatientRepository patientRepository;
+    PatientService patientService;
     @Autowired
     EventRepository eventRepository;
     @Autowired
-    PrescriptionRepository prescriptionRepository;
+    PrescriptionService prescriptionService;
     @Autowired
     TreatmentRepository treatmentRepository;
 
@@ -33,8 +35,8 @@ public class EntitiesInit implements CommandLineRunner {
         Prescription pr = new Prescription(UUID.randomUUID(), UUID.randomUUID(), "Twice a week", 2);
         Treatment t = new Treatment("Tylenol", "Medicine");
         eventRepository.save(e);
-        patientRepository.save(p);
-        prescriptionRepository.save(pr);
+        patientService.save(p);
+        prescriptionService.save(pr);
         treatmentRepository.save(t);
     }
 }
