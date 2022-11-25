@@ -21,15 +21,19 @@ public class PrescriptionService {
         return prescriptionRepository.findById(id);
     }
 
-    public Prescription save (Prescription prescription) throws ClassNotFoundException {
+    public Optional<Prescription> getByPatientId (UUID id) {
+        return prescriptionRepository.findOneByPatientId(id);
+    }
+
+    public void save (Prescription prescription) throws ClassNotFoundException {
         prescription.setDatePrescribed(OffsetDateTime.now());
         prescriptionRepository.save(prescription);
-        Optional<Prescription> savedPrescription = prescriptionRepository.findById(prescription.getId());
+       /* Optional<Prescription> savedPrescription = prescriptionRepository.findById(prescription.getId());
         if(savedPrescription.isPresent()){
             return savedPrescription.get();
         } else {
             throw new ClassNotFoundException("The patient was not found after saving");
-        }
+        }*/
     }
 
 }

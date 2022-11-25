@@ -5,6 +5,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -23,11 +24,15 @@ public class Prescription {
 
     @NonNull
     @Type(type = "uuid-char")
-    private UUID patientId;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "patientId")
+    private Patient patient;
 
     @NonNull
     @Type(type = "uuid-char")
-    private UUID treatmentId;
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "treatmentId")
+    private Treatment treatment;
 
     @NonNull
     private String timePattern;

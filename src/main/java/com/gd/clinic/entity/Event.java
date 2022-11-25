@@ -23,11 +23,14 @@ public class Event {
 
     @NonNull
     @Type(type = "uuid-char")
-    private UUID prescriptionId;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "prescriptionId")
+    private Prescription prescription;
 
     @NonNull
-    @Type(type = "uuid-char")
-    private UUID patientId;
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "patientId")
+    private Patient patient;
 
     @NonNull
     private OffsetDateTime dateTime;

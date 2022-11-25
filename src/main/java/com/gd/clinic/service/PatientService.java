@@ -34,6 +34,10 @@ public class PatientService {
         patientRepository.save(patient);
     }
 
+    public Optional<Patient> getByIN(String in) {
+        return patientRepository.findOneByInsuranceNumber(in);
+    }
+
     //TODO: Uncomment once branch "security" has been merged to this branch or vice versa
    /*private String getCurrentUser() {
         String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();

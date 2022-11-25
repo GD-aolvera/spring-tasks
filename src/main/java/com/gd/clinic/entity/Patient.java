@@ -34,6 +34,9 @@ public class Patient{
     private String insuranceNumber;
 
     @Type(type = "uuid-char")
+    //TODO: Uncomment when branch "security" is merged or vice versa to reference the user entity for the doctor id
+    //@OneToOne
+    //@JoinTable(name = "doctor_patients", joinColumns = @JoinColumn(name = "doctorId"), inverseJoinColumns = @JoinColumn(name = "patientId"))
     private UUID doctorId;
 
     private String status;

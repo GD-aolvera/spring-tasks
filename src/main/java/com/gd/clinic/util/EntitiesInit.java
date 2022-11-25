@@ -1,4 +1,4 @@
-package com.gd.clinic.util;
+/*package com.gd.clinic.util;
 
 import com.gd.clinic.entity.*;
 import com.gd.clinic.model.EventResponseDto;
@@ -27,16 +27,19 @@ public class EntitiesInit implements CommandLineRunner {
 
 
     @Override
-    public void run(String... args) throws Exception {
+   public void run(String... args) throws Exception {
         Patient p = new Patient("John", "Cancer", "ASD12345");
         p.setStatus(PatientResponseDto.StatusEnum.RECOVERED.getValue());
         p.setDoctorId(UUID.randomUUID());
-        Event e = new Event(UUID.randomUUID(), UUID.randomUUID(), OffsetDateTime.now(), EventResponseDto.StatusEnum.SCHEDULED);
-        Prescription pr = new Prescription(UUID.randomUUID(), UUID.randomUUID(), "Twice a week", 2);
-        Treatment t = new Treatment("Tylenol", "Medicine");
-        eventRepository.save(e);
         patientService.save(p);
-        prescriptionService.save(pr);
+        Treatment t = new Treatment("Tylenol", "Medicine");
         treatmentRepository.save(t);
+        Prescription pr = new Prescription(patientService.getByIN("ASD12345").get(), treatmentRepository.findOneByName("Tylenol").get(), "Twice a week", 2);
+        prescriptionService.save(pr);
+        Event e = new Event(prescriptionService.getByPatientId(patientService.getByIN("ASD12345").get().getId()).get(), patientService.getByIN("ASD12345").get(), OffsetDateTime.now(), EventResponseDto.StatusEnum.SCHEDULED);
+        eventRepository.save(e);
     }
+
 }
+*/
+
