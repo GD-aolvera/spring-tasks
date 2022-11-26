@@ -3,6 +3,7 @@ package com.gd.clinic.security.entity;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.Objects;

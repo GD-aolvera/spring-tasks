@@ -27,21 +27,7 @@ public class AdminController implements AdminApi {
     @Override
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDto> createUser(NewUserDto newUserDto) {
-        String role = "";
-        User user = configUser(newUserDto);
-        if (userService.existsByUsername(newUserDto.getUserName())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        switch (newUserDto.getRole()) {
-            case ADMIN -> role = RoleName.ROLE_ADMIN.name();
-            case NURSE -> role = RoleName.ROLE_NURSE.name();
-            case DOCTOR -> role = RoleName.ROLE_DOCTOR.name();
-
-        }
-
-        user.setRole(role);
-        userService.save(user);
-        return ResponseEntity.ok(configUserResponse(userService.getByUserName(newUserDto.getUserName()).get()));
+        return ResponseEntity.ok(userService.createUser(newUserDto));
     }
 
     @Override
@@ -54,23 +40,7 @@ public class AdminController implements AdminApi {
         return ResponseEntity.ok(refreshTokenService.refreshToken(jwtRefreshRequestDto));
     }
 
-    private User configUser(NewUserDto newUserDto) {
-        User user = new User(newUserDto.getFirstName(), newUserDto.getLastName(), newUserDto.getUserName(), new BCryptPasswordEncoder().encode(newUserDto.getPassword()));
-        user.setCreatedAt(OffsetDateTime.now());
-        user.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-        return user;
-    }
 
-    private UserResponseDto configUserResponse(User user) {
-        UserResponseDto response = new UserResponseDto();
-        response.setId(user.getId().toString());
-        response.setFirstName(user.getFirstName());
-        response.setLastName(user.getLastName());
-        response.setUserName(user.getUserName());
-        response.setPassword(user.getPassword());
-        response.setRole(UserResponseDto.RoleEnum.fromValue(user.getRole().substring(5).toLowerCase()));
-        response.setCreatedAt(user.getCreatedAt());
-        response.setCreatedBy(user.getCreatedBy());
-        return response;
-    }
+
+
 }

@@ -6,6 +6,7 @@ import com.gd.clinic.model.TreatmentResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.util.List;
 
 @PreAuthorize("hasAnyRole('DOCTOR', 'ADMIN')")

@@ -21,9 +21,8 @@ public class AuthInit implements CommandLineRunner {
     UserDetailServiceImpl userService;
 
     @Override
-    public void run(String... args)  {
-        User initAdmin = new User("Super", "User", "admin", new BCryptPasswordEncoder().encode("admin"));
-        initAdmin.setRole(RoleName.ROLE_ADMIN.name());
+    public void run(String... args) {
+        User initAdmin = new User("Super", "User", "admin", new BCryptPasswordEncoder().encode("admin"), RoleName.ROLE_ADMIN.name());
         List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority(initAdmin.getRole()));
         UserMain.build(initAdmin);

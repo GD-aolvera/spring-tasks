@@ -3,29 +3,33 @@ package com.gd.clinic.security.service;
 import com.gd.clinic.security.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
+@Accessors(chain = true)
+
 public class UserMain implements UserDetails {
 
     private String firstName;
     private String lastName;
-    private String userName;
+    private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
     private User user;
 
-    public static UserMain build(User user){
+    public static UserMain build(User user) {
         List<GrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority(user.getRole()));
-        return new UserMain(user.getFirstName(), user.getLastName(), user.getUserName(), user.getPassword(), authorityList, user);
+        return new UserMain(user.getFirstName(), user.getLastName(), user.getUsername(), user.getPassword(), authorityList, user);
     }
 
     @Override
@@ -42,7 +46,7 @@ public class UserMain implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override
@@ -65,7 +69,7 @@ public class UserMain implements UserDetails {
         return true;
     }
 
-    public String getName(){
+    public String getName() {
         return user.getFirstName() + " " + user.getLastName();
     }
 }

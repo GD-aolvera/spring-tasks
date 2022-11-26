@@ -686,7 +686,7 @@ components:
           type: string
           example: Doe
           description: The user's last name
-        userName:
+        username:
           type: string
           example: aolvera
           description: The user's login identifier
@@ -717,7 +717,7 @@ components:
           type: string
           example: Doe
           description: The user's last name
-        userName:
+        username:
           type: string
           example: dBowie
           description: Username
