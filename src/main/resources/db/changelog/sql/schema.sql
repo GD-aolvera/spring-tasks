@@ -1,0 +1,11 @@
+create table events (id varchar(255) not null, cancel_reason varchar(255), date_time timestamp, status bytea, primary key (id));
+create table patient_prescriptions (patient_id varchar(255), prescription_id varchar(255) not null, primary key (prescription_id));
+create table patients (id varchar(255) not null, created_at timestamp, created_by varchar(255), diagnosis varchar(255), doctor_id varchar(255), insurance_number varchar(255), name varchar(255), status varchar(255), primary key (id));
+create table prescription_events (prescription_id varchar(255), event_id varchar(255) not null, primary key (event_id));
+create table prescriptions (id varchar(255) not null, date_prescribed timestamp, period int4, time_pattern varchar(255), treatment_id varchar(255), primary key (id));
+create table treatments (id varchar(255) not null, name varchar(255), type varchar(255), primary key (id));
+alter table patient_prescriptions add constraint FKqw1m98tmvefft58kycvguhcmq foreign key (patient_id) references patients;
+alter table patient_prescriptions add constraint FKma6225wdw137b7yf7fq1hcsfx foreign key (prescription_id) references prescriptions;
+alter table prescription_events add constraint FKqjnwb5l3pr564gyhyi6kqxawj foreign key (prescription_id) references prescriptions;
+alter table prescription_events add constraint FKcy6vviouhuhpvk5n3v50gvxxv foreign key (event_id) references events;
+alter table prescriptions add constraint FKct31kf0gdy2r844xaor9ilapm foreign key (treatment_id) references treatments;

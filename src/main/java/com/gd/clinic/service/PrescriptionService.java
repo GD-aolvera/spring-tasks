@@ -1,6 +1,7 @@
 package com.gd.clinic.service;
 
 import com.gd.clinic.entity.Prescription;
+import com.gd.clinic.entity.Treatment;
 import com.gd.clinic.repository.PrescriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,23 +18,19 @@ public class PrescriptionService {
     @Autowired
     private PrescriptionRepository prescriptionRepository;
 
-    public Optional<Prescription> getById (UUID id){
+    public Optional<Prescription> getById(UUID id){
         return prescriptionRepository.findById(id);
     }
 
-    public Optional<Prescription> getByPatientId (UUID id) {
+    public Optional<Prescription> getByPatientId(UUID id) {
         return prescriptionRepository.findOneByPatientId(id);
     }
 
-    public void save (Prescription prescription) throws ClassNotFoundException {
+    public Optional<Prescription> getByTreatment(Treatment t) { return prescriptionRepository.findOneByTreatment(t); }
+
+    public void save (Prescription prescription)  {
         prescription.setDatePrescribed(OffsetDateTime.now());
         prescriptionRepository.save(prescription);
-       /* Optional<Prescription> savedPrescription = prescriptionRepository.findById(prescription.getId());
-        if(savedPrescription.isPresent()){
-            return savedPrescription.get();
-        } else {
-            throw new ClassNotFoundException("The patient was not found after saving");
-        }*/
     }
 
 }

@@ -1,5 +1,6 @@
 package com.gd.clinic.entity;
 
+import com.gd.clinic.model.NewEventDto;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -22,21 +23,16 @@ public class Event {
     private UUID id;
 
     @NonNull
-    @Type(type = "uuid-char")
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "prescriptionId")
+    @ManyToOne
+    @JoinTable(name = "prescription_events", joinColumns = @JoinColumn(name = "eventId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescriptionId", referencedColumnName = "id"))
     private Prescription prescription;
-
-    @NonNull
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "patientId")
-    private Patient patient;
 
     @NonNull
     private OffsetDateTime dateTime;
 
     @NonNull
-    private Enum status;
+    private NewEventDto.StatusEnum status;
+
 
     private String cancelReason;
 }

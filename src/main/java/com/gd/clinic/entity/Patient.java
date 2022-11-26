@@ -6,8 +6,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 
 @RequiredArgsConstructor
@@ -17,7 +16,7 @@ import java.util.UUID;
 @ToString
 @Entity
 @Table(name = "patients")
-public class Patient{
+public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,12 +38,15 @@ public class Patient{
     //@JoinTable(name = "doctor_patients", joinColumns = @JoinColumn(name = "doctorId"), inverseJoinColumns = @JoinColumn(name = "patientId"))
     private UUID doctorId;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @Transient
+    private Set<Prescription> prescriptionList = new HashSet<>();
+
     private String status;
 
     private OffsetDateTime createdAt = OffsetDateTime.now();
 
     private String createdBy;
-
 
     @Override
     public boolean equals(Object o) {

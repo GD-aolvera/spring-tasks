@@ -9,12 +9,13 @@ spring:
         ddl-auto: create-drop
     properties:
       javax:
-        persistence:
-          schema-generation:
-            create-source: metadata
-            scripts:
-              action: create
-              create-target: src/main/resources/db/changelog/sql/schema.sql
+        #USE TO GENERATE SQL SCHEMA SCRIPT FROM JPA ENTITIES
+        #persistence:
+         # schema-generation:
+          #  create-source: metadata
+           # scripts:
+            #  action: create
+             # create-target: src/main/resources/db/changelog/sql/schema.sql
     database-platform:
       org.hibernate.dialect.PostgreSQL9Dialect
   liquibase:

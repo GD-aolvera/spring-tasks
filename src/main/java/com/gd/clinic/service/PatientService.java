@@ -24,7 +24,7 @@ public class PatientService {
     }
 
     public boolean existsByInsuranceNumber(String in) {
-        return patientRepository.findOneByInsuranceNumber(in) != null;
+        return patientRepository.findOneByInsuranceNumber(in).isPresent();
     }
 
     public void save(Patient patient) {

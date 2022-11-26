@@ -1,12 +1,12 @@
 package com.gd.clinic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @NoArgsConstructor
 @RequiredArgsConstructor
@@ -23,14 +23,14 @@ public class Prescription {
     private UUID id;
 
     @NonNull
-    @Type(type = "uuid-char")
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "patientId")
+    @ManyToOne
+    @JoinTable(name = "patient_prescriptions", joinColumns = @JoinColumn(name = "prescriptionId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "patientId", referencedColumnName = "id"))
+    @JsonIgnoreProperties("prescriptionList")
     private Patient patient;
 
     @NonNull
     @Type(type = "uuid-char")
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne
     @JoinColumn(name = "treatmentId")
     private Treatment treatment;
 
@@ -39,6 +39,9 @@ public class Prescription {
 
     @NonNull
     private Integer period;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<Event> eventList =  new HashSet<>();
 
     private OffsetDateTime datePrescribed;
 
