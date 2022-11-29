@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -29,8 +28,9 @@ public class UserService {
         return userRepo.existsByUsername(username);
     }
 
-    public void save(User user) {
+    public UserResponseDto save(User user) {
         userRepo.save(user);
+        return configUserResponse(user);
     }
 
     public UserResponseDto createUser(NewUserDto newUserDto) throws ResponseStatusException {
@@ -39,8 +39,7 @@ public class UserService {
         }
         User user = configUser(newUserDto);
         user.setRole(UserResponseDto.RoleEnum.fromValue(user.getRole().toLowerCase()).name());
-        this.save(user);
-        return configUserResponse(getByUserName(newUserDto.getUsername()).get());
+        return save(user);
     }
 
     private User configUser(NewUserDto newUserDto) {

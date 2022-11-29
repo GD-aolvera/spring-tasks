@@ -1,4 +1,7 @@
+
 spring:
+  main:
+    allow-bean-definition-overriding=true:
   h2:
     console:
       enabled: true
@@ -19,3 +22,8 @@ jwt:
   secret: mySecret
   refreshToken:
     expiration: 1
+
+myapp:
+  access:
+    token:
+      secret: eyJhbGciOiJIUzI1NiIsInR5cCI6Ikp9

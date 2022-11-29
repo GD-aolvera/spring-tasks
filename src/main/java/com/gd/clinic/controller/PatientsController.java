@@ -6,12 +6,10 @@ import com.gd.clinic.model.PatientResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
 public class PatientsController implements PatientsApi {
-
 
     @PreAuthorize("hasRole('DOCTOR')")
     @Override

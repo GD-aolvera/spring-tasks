@@ -7,11 +7,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-
 public interface MapNewUserDtoToUser {
 
     MapNewUserDtoToUser INSTANCE = Mappers.getMapper(MapNewUserDtoToUser.class);
-    //@Mapping(target = "username", source = "username")
     @Mapping(target = "username", source = "username",
             defaultExpression = "java(java.util.UUID.randomUUID().toString())")
     User newUserToUser(NewUserDto user);

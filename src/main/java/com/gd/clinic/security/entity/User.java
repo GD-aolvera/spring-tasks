@@ -1,12 +1,10 @@
 package com.gd.clinic.security.entity;
 
-import com.gd.clinic.model.NewUserDto;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedBy;
-
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -20,7 +18,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-
 @Table(name = "users")
 public class User {
 
@@ -49,9 +46,6 @@ public class User {
 
     @CreatedBy
     private String createdBy;
-
-    /*public User(String firstName, String lastName, String username, String encode, NewUserDto.RoleEnum role) {
-    }*/
 
     @Override
     public boolean equals(Object o) {

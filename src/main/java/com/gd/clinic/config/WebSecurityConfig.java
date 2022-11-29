@@ -1,14 +1,12 @@
 package com.gd.clinic.config;
 
-import com.gd.clinic.security.service.RefreshTokenService;
 import com.gd.clinic.security.jwt.JWTAuthenticationFilter;
 import com.gd.clinic.security.jwt.JWTAuthorizationFilter;
 import com.gd.clinic.security.service.UserDetailServiceImpl;
 import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -16,25 +14,32 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @AllArgsConstructor
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@PropertySource("classpath:application.yml")
 public class WebSecurityConfig {
 
+    private final AppConfiguration appConfiguration;
     private final UserDetailServiceImpl userDetailsService;
     private final JWTAuthorizationFilter jwtAuthorizationFilter;
-    final RefreshTokenService refreshTokenService;
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
-        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(refreshTokenService);
+        JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(
+                appConfiguration.getAccessTokenSecret());
         jwtAuthenticationFilter.setAuthenticationManager(authManager);
         jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
 
@@ -71,17 +76,9 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
-
-    @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-     //@Bean
-     //UserDetailsService setUserDetailsServiceFactoryBean(){return new UserDetailServiceImpl();}
 
 }
 

@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +22,6 @@ public class UserMain implements UserDetails {
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
-
     private User user;
 
     public static UserMain build(User user) {
@@ -72,5 +70,6 @@ public class UserMain implements UserDetails {
     public String getName() {
         return user.getFirstName() + " " + user.getLastName();
     }
+
 }
 
