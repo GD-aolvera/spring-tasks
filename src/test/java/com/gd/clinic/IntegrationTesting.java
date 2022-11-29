@@ -5,7 +5,9 @@ import com.gd.clinic.entity.Event;
 import com.gd.clinic.entity.Patient;
 import com.gd.clinic.entity.Prescription;
 import com.gd.clinic.entity.Treatment;
+import com.gd.clinic.model.NewEventDto;
 import com.gd.clinic.model.NewPatientDto;
+import com.gd.clinic.model.NewPrescriptionDto;
 import com.gd.clinic.model.NewTreatmentDto;
 import com.gd.clinic.repository.EventRepository;
 import com.gd.clinic.repository.TreatmentRepository;
@@ -42,25 +44,9 @@ public class IntegrationTesting extends ContainersEnvironment {
 
     @Test
     public void integralTest() throws InterruptedException {
-        Treatment t1 = new Treatment("Oxicdin", NewTreatmentDto.TypeEnum.MEDICINE);
-        Treatment t2 = new Treatment("Physical Therapy", NewTreatmentDto.TypeEnum.PROCEDURE);
-        treatmentRepository.save(t1);
-        treatmentRepository.save(t2);
-        Patient p = new Patient("John", "Smith", "Cancer", "ASO@#4134", OffsetDateTime.now());
-        Prescription pr1 = new Prescription(p, t1, "Twice a day", 3);
-        Prescription pr2 = new Prescription(p, t2, "Twice a week", 30);
-        Set<Prescription> prescriptionSet = new HashSet<>();
-        prescriptionSet.add(pr1);
-        prescriptionSet.add(pr2);
-        p.setPrescriptionList(prescriptionSet);
-        p.setStatus(NewPatientDto.StatusEnum.IN_TREATMENT);
-        Event e1 = new Event(pr1, OffsetDateTime.now());
-        Event e2 = new Event(pr2, OffsetDateTime.now());
-        prescriptionService.save(pr1);
-        prescriptionService.save(pr2);
-        eventRepository.save(e1);
-        eventRepository.save(e2);
-        patientService.save(p);
+        Treatment [] treatments = generateTreatments();
+        Patient p = generatePatient(treatments);
+        generateEvents(p.getPrescriptionList());
         checkDBContinue();
     }
 
@@ -77,6 +63,47 @@ public class IntegrationTesting extends ContainersEnvironment {
                 carryOn.notify();
             }
         }
+    }
+
+    private Treatment[] generateTreatments() {
+        Treatment[] result =  new Treatment[2];
+        result[0] = new Treatment("Vicodin", NewTreatmentDto.TypeEnum.MEDICINE);
+        result[1] = new Treatment("Physical Therapy", NewTreatmentDto.TypeEnum.PROCEDURE);
+        treatmentRepository.save(result[0]);
+        treatmentRepository.save(result[1]);
+        return result;
+    }
+
+    private Set<Prescription> generatePrescriptions (Treatment[] treatments, Patient p){
+        Set<Prescription> prescriptionSet = new HashSet<>();
+        Prescription pr1 = new Prescription(p, treatments[0], "Twice a day", 3);
+        Prescription pr2 = new Prescription(p, treatments[1], "Twice a week", 30);
+        pr1.setStatus(NewPrescriptionDto.StatusEnum.ACTIVE);
+        pr2.setStatus(NewPrescriptionDto.StatusEnum.ACTIVE);
+        prescriptionService.save(pr1);
+        prescriptionService.save(pr2);
+        prescriptionSet.add(pr1);
+        prescriptionSet.add(pr2);
+        return prescriptionSet;
+    }
+
+    private Patient generatePatient(Treatment[] treatments) {
+        Patient p = new Patient("John", "Smith", "Cancer", "ASO@#4134", OffsetDateTime.now());
+        patientService.save(p);
+        p.setPrescriptionList(generatePrescriptions(treatments, p));
+        p.setStatus(NewPatientDto.StatusEnum.IN_TREATMENT);
+        patientService.save(p);
+        return p;
+    }
+
+    private Event[] generateEvents(Set<Prescription> prescriptions){
+        Event e1 = new Event((Prescription) prescriptions.stream().toArray()[1], OffsetDateTime.now());
+        Event e2 = new Event((Prescription) prescriptions.stream().toArray()[0], OffsetDateTime.now());
+        e1.setStatus(NewEventDto.StatusEnum.SCHEDULED);
+        e2.setStatus(NewEventDto.StatusEnum.DONE);
+        eventRepository.save(e1);
+        eventRepository.save(e2);
+        return new Event[] {e1,e2};
     }
 
 }

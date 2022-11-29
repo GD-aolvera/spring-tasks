@@ -516,6 +516,7 @@ components:
           enum:
             - In treatment
             - Recovered
+            - Discharged
     NewPatient:
       type: object
       properties:
@@ -550,6 +551,7 @@ components:
           enum:
             - In treatment
             - Recovered
+            - Discharged
     NewPrescription:
       type: object
       properties:
@@ -623,6 +625,7 @@ components:
           enum:
             - Scheduled
             - Done
+            - Cancelled
     EventResponse:
       type: object
       properties:

@@ -48,7 +48,7 @@ public class PrescriptionService {
     public Prescription save (Prescription prescription) throws RuntimeException {
         prescription.setDatePrescribed(OffsetDateTime.now());
         prescriptionRepository.save(prescription);
-        Optional<Prescription> savedPrescription = prescriptionRepository.findOneByPatientId(prescription.getPatient().getId());
+        Optional<Prescription> savedPrescription = prescriptionRepository.findById(prescription.getId());
         if(savedPrescription.isPresent()){
             return savedPrescription.get();
         } else {

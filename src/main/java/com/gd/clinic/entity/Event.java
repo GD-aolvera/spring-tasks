@@ -26,14 +26,14 @@ public class Event {
 
     @NonNull
     @ManyToOne
-   // @JoinTable(name = "prescriptions_event_list", joinColumns = @JoinColumn(name = "eventId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescriptionId", referencedColumnName = "id"))
+    @JoinColumn(name = "prescription_id")
     private Prescription prescription;
 
     @NonNull
     private OffsetDateTime dateTime;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", columnDefinition = "ENUM('SCHEDULED', 'DONE')")
+    @Column(name = "status", columnDefinition = "ENUM('SCHEDULED', 'DONE', 'Cancelled')")
     private NewEventDto.StatusEnum status;
 
     private String cancelReason;

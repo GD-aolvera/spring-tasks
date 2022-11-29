@@ -18,7 +18,6 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
 
-
     public Patient getById(UUID id) throws RuntimeException {
         Optional<Patient> fetchedPatient = patientRepository.findById(id);
         if(fetchedPatient.isPresent()) {

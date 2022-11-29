@@ -1,10 +1,10 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TYPE event_status AS ENUM('SCHEDULED', 'DONE');
+CREATE TYPE event_status AS ENUM('SCHEDULED', 'DONE', 'STATUS');
 
 CREATE CAST (varchar AS event_status) WITH INOUT AS IMPLICIT;
 
-CREATE TYPE patient_status AS ENUM('IN_TREATMENT', 'RECOVERED');
+CREATE TYPE patient_status AS ENUM('IN_TREATMENT', 'RECOVERED', 'DISCHARGED');
 
 CREATE CAST (varchar AS patient_status) WITH INOUT AS IMPLICIT;
 
@@ -52,6 +52,7 @@ CREATE TABLE treatments
 CREATE TABLE prescriptions
   (
      id              uuid DEFAULT uuid_generate_v4 () NOT NULL,
+     patient_id      uuid DEFAULT uuid_generate_v4 () NOT NULL,
      date_prescribed TIMESTAMP,
      period          INT4,
      time_pattern    TEXT,
@@ -59,29 +60,9 @@ CREATE TABLE prescriptions
      status          prescription_status,
      PRIMARY KEY (id),
      FOREIGN KEY (treatment_id)
-        REFERENCES treatments(id)
-  );
-
-CREATE TABLE patient_prescriptions
-  (
-     patient_id      uuid DEFAULT uuid_generate_v4 (),
-     prescription_id uuid DEFAULT uuid_generate_v4 () NOT NULL,
-     PRIMARY KEY (prescription_id),
+        REFERENCES treatments(id),
      FOREIGN KEY (patient_id)
-        REFERENCES patients(id),
-     FOREIGN KEY (prescription_id)
-        REFERENCES prescriptions(id)
+        REFERENCES patients(id)
   );
 
-CREATE TABLE prescriptions_event_list
-  (
-     prescription_id uuid DEFAULT uuid_generate_v4 (),
-     event_id        uuid DEFAULT uuid_generate_v4 () NOT NULL,
-     event_list_id   uuid DEFAULT uuid_generate_v4 () NOT NULL,
-     PRIMARY KEY (event_id),
-     FOREIGN KEY (prescription_id)
-        REFERENCES prescriptions(id),
-     FOREIGN KEY (event_id)
-        REFERENCES events(id)
-  );
 

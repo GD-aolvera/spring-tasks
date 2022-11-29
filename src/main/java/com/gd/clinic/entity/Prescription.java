@@ -27,7 +27,7 @@ public class Prescription {
 
     @NonNull
     @ManyToOne
-    @JoinTable(name = "patient_prescriptions", joinColumns = @JoinColumn(name = "prescriptionId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "patientId", referencedColumnName = "id"))
+    @JoinColumn(name = "patient_id")
     @JsonIgnoreProperties("prescriptionList")
     private Patient patient;
 
@@ -44,6 +44,7 @@ public class Prescription {
     private Integer period;
 
     @OneToMany(fetch = FetchType.EAGER)
+    @Transient
     private Set<Event> eventList =  new HashSet<>();
 
     private OffsetDateTime datePrescribed;
