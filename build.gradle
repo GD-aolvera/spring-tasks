@@ -47,10 +47,13 @@ dependencies {
 	compileOnly "org.projectlombok:lombok"
 
 	runtimeOnly "org.postgresql:postgresql:${postgresVersion}"
+	runtimeOnly 'com.h2database:h2'
 
 	annotationProcessor "org.projectlombok:lombok"
 
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	testImplementation "org.testcontainers:junit-jupiter:1.17.6"
+	testImplementation "org.testcontainers:postgresql:1.17.6"
 }
 
 configurations {
@@ -61,3 +64,5 @@ configurations {
 tasks.named("test") {
 	useJUnitPlatform()
 }
+
+

@@ -1,11 +1,87 @@
-create table events (id varchar(255) not null, cancel_reason varchar(255), date_time timestamp, status bytea, primary key (id));
-create table patient_prescriptions (patient_id varchar(255), prescription_id varchar(255) not null, primary key (prescription_id));
-create table patients (id varchar(255) not null, created_at timestamp, created_by varchar(255), diagnosis varchar(255), doctor_id varchar(255), insurance_number varchar(255), name varchar(255), status varchar(255), primary key (id));
-create table prescription_events (prescription_id varchar(255), event_id varchar(255) not null, primary key (event_id));
-create table prescriptions (id varchar(255) not null, date_prescribed timestamp, period int4, time_pattern varchar(255), treatment_id varchar(255), primary key (id));
-create table treatments (id varchar(255) not null, name varchar(255), type varchar(255), primary key (id));
-alter table patient_prescriptions add constraint FKqw1m98tmvefft58kycvguhcmq foreign key (patient_id) references patients;
-alter table patient_prescriptions add constraint FKma6225wdw137b7yf7fq1hcsfx foreign key (prescription_id) references prescriptions;
-alter table prescription_events add constraint FKqjnwb5l3pr564gyhyi6kqxawj foreign key (prescription_id) references prescriptions;
-alter table prescription_events add constraint FKcy6vviouhuhpvk5n3v50gvxxv foreign key (event_id) references events;
-alter table prescriptions add constraint FKct31kf0gdy2r844xaor9ilapm foreign key (treatment_id) references treatments;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TYPE event_status AS ENUM('SCHEDULED', 'DONE');
+
+CREATE CAST (varchar AS event_status) WITH INOUT AS IMPLICIT;
+
+CREATE TYPE patient_status AS ENUM('IN_TREATMENT', 'RECOVERED');
+
+CREATE CAST (varchar AS patient_status) WITH INOUT AS IMPLICIT;
+
+CREATE TYPE prescription_status AS ENUM('ACTIVE', 'INACTIVE');
+
+CREATE CAST (varchar AS prescription_status) WITH INOUT AS IMPLICIT;
+
+CREATE TYPE treatment_type AS ENUM('PROCEDURE', 'MEDICINE');
+
+CREATE CAST (varchar AS treatment_type) WITH INOUT AS IMPLICIT;
+
+CREATE TABLE events
+  (
+     id            uuid DEFAULT uuid_generate_v4 () NOT NULL,
+     prescription_id uuid DEFAULT uuid_generate_v4 () NOT NULL,
+     cancel_reason TEXT,
+     date_time     TIMESTAMP,
+     status        event_status,
+     PRIMARY KEY (id)
+  );
+
+CREATE TABLE patients
+  (
+     id               uuid DEFAULT uuid_generate_v4 () NOT NULL,
+     created_at       TIMESTAMP,
+     created_by       TEXT,
+     diagnosis        TEXT,
+     doctor_id        uuid DEFAULT uuid_generate_v4 (),
+     insurance_number TEXT,
+     first_name       TEXT,
+     last_name        TEXT,
+     birth_date       TIMESTAMP,
+     status           patient_status,
+     PRIMARY KEY (id)
+  );
+
+CREATE TABLE treatments
+  (
+     id   uuid DEFAULT uuid_generate_v4 () NOT NULL,
+     NAME TEXT,
+     type treatment_type,
+     PRIMARY KEY (id)
+  );
+
+CREATE TABLE prescriptions
+  (
+     id              uuid DEFAULT uuid_generate_v4 () NOT NULL,
+     date_prescribed TIMESTAMP,
+     period          INT4,
+     time_pattern    TEXT,
+     treatment_id    uuid DEFAULT uuid_generate_v4 (),
+     status          prescription_status,
+     PRIMARY KEY (id),
+     FOREIGN KEY (treatment_id)
+        REFERENCES treatments(id)
+  );
+
+CREATE TABLE patient_prescriptions
+  (
+     patient_id      uuid DEFAULT uuid_generate_v4 (),
+     prescription_id uuid DEFAULT uuid_generate_v4 () NOT NULL,
+     PRIMARY KEY (prescription_id),
+     FOREIGN KEY (patient_id)
+        REFERENCES patients(id),
+     FOREIGN KEY (prescription_id)
+        REFERENCES prescriptions(id)
+  );
+
+CREATE TABLE prescriptions_event_list
+  (
+     prescription_id uuid DEFAULT uuid_generate_v4 (),
+     event_id        uuid DEFAULT uuid_generate_v4 () NOT NULL,
+     event_list_id   uuid DEFAULT uuid_generate_v4 () NOT NULL,
+     PRIMARY KEY (event_id),
+     FOREIGN KEY (prescription_id)
+        REFERENCES prescriptions(id),
+     FOREIGN KEY (event_id)
+        REFERENCES events(id)
+  );
+

@@ -2,6 +2,7 @@ package com.gd.clinic.entity;
 
 import com.gd.clinic.model.NewEventDto;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -18,21 +19,22 @@ import java.util.UUID;
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Type(type = "uuid-char")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Type(type = "pg-uuid")
     private UUID id;
 
     @NonNull
     @ManyToOne
-    @JoinTable(name = "prescription_events", joinColumns = @JoinColumn(name = "eventId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescriptionId", referencedColumnName = "id"))
+   // @JoinTable(name = "prescriptions_event_list", joinColumns = @JoinColumn(name = "eventId", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "prescriptionId", referencedColumnName = "id"))
     private Prescription prescription;
 
     @NonNull
     private OffsetDateTime dateTime;
 
-    @NonNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "ENUM('SCHEDULED', 'DONE')")
     private NewEventDto.StatusEnum status;
-
 
     private String cancelReason;
 }

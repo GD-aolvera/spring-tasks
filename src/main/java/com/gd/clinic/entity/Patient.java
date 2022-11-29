@@ -1,7 +1,9 @@
 package com.gd.clinic.entity;
 
+import com.gd.clinic.model.NewPatientDto;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -19,12 +21,16 @@ import java.util.*;
 public class Patient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Type(type = "uuid-char")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Type(type = "pg-uuid")
     private UUID id;
 
     @NonNull
-    private String name;
+    private String firstName;
+
+    @NonNull
+    private  String lastName;
 
     @NonNull
     private String diagnosis;
@@ -32,7 +38,10 @@ public class Patient {
     @NonNull
     private String insuranceNumber;
 
-    @Type(type = "uuid-char")
+    @NonNull
+    private OffsetDateTime birthDate;
+
+    @Type(type = "pg-uuid")
     //TODO: Uncomment when branch "security" is merged or vice versa to reference the user entity for the doctor id
     //@OneToOne
     //@JoinTable(name = "doctor_patients", joinColumns = @JoinColumn(name = "doctorId"), inverseJoinColumns = @JoinColumn(name = "patientId"))
@@ -42,9 +51,11 @@ public class Patient {
     @Transient
     private Set<Prescription> prescriptionList = new HashSet<>();
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "ENUM('IN_TREATMENT', 'RECOVERED')")
+    private NewPatientDto.StatusEnum status;
 
-    private OffsetDateTime createdAt = OffsetDateTime.now();
+    private OffsetDateTime createdAt;
 
     private String createdBy;
 

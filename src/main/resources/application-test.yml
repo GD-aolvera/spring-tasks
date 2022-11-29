@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
+    database-platform:
+      org.hibernate.dialect.PostgreSQL9Dialect
+  liquibase:
+    change-log: classpath:db/changelog/changelog.yml
+
+

@@ -1,6 +1,8 @@
 package com.gd.clinic.entity;
 
+import com.gd.clinic.model.NewTreatmentDto;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -16,14 +18,17 @@ import java.util.UUID;
 public class Treatment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Type(type = "uuid-char")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Type(type = "pg-uuid")
     private UUID id;
 
     @NonNull
     private String name;
 
     @NonNull
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", columnDefinition = "ENUM('PROCEDURE', 'MEDICINE')")
+    private NewTreatmentDto.TypeEnum type;
 
 }

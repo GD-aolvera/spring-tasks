@@ -501,6 +501,14 @@ components:
           type: string
           format: uuid
           description: Doctors table UUID corresponding to the patient's assigned doctor
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of profile creation
+        createdBy:
+          type: string
+          example: user
+          description: User responsible for the creation of this patient
         status:
           type: string
           description: patient's treatment progress
@@ -511,10 +519,18 @@ components:
     NewPatient:
       type: object
       properties:
-        name:
+        firstName:
           type: string
-          description: Name of the patient
-          example: John Smith
+          description: first name of the patient
+          example: John
+        lastName:
+          type: string
+          description: last name of the patient
+          example: Smith
+        birthDate:
+          type: string
+          format: date-time
+          description: Date and time of patient's birth
         diagnosis:
           type: string
           description: Patient's diagnosis
@@ -550,6 +566,12 @@ components:
           format: int64
           example: 5
           description: Duration of the treatment in days
+        status:
+          type: string
+          example: "active"
+          enum:
+            - Active
+            - Inactive
     PrescriptionResponse:
       type: object
       properties:
@@ -577,6 +599,12 @@ components:
           type: string
           format: date-time
           description: Date and time of prescription
+        status:
+          type: string
+          example: "active"
+          enum:
+            - Active
+            - Inactive
     NewEvent:
       type: object
       properties:
