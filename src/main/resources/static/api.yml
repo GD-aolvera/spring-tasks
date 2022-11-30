@@ -210,7 +210,7 @@ paths:
         - Patients
       summary: Discharge a patient by given ID
       description: Deletes any prescriptions under the given insurance number, subsequently all related events.
-      operationId: dischargePatientByInsurance
+      operationId: dischargePatientById
       parameters:
         - name: patientId
           in: path
@@ -477,6 +477,25 @@ paths:
       responses:
         '200':
           description: Auth token in response header -> "authorization:"
+  /auth/refresh:
+    post:
+      tags:
+        - Admin
+      summary: Process provided refresh token
+      description: ''
+      operationId: tokenRefresh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JwtRefreshRequest'
+      responses:
+        '200':
+          description: 'Refresh token succesfully processed, returning JWT auth token and refresh token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'                
 components:
   schemas:
     PatientResponse:
@@ -667,7 +686,7 @@ components:
           type: string
           example: Doe
           description: The user's last name
-        userName:
+        username:
           type: string
           example: aolvera
           description: The user's login identifier
@@ -698,7 +717,7 @@ components:
           type: string
           example: Doe
           description: The user's last name
-        userName:
+        username:
           type: string
           example: dBowie
           description: Username
@@ -723,6 +742,7 @@ components:
             - admin
             - doctor
             - nurse
+          x-enum-varnames: [ROLE_ADMIN, ROLE_DOCTOR, ROLE_NURSE]
     Credentials:
       properties:
         username:
@@ -733,6 +753,22 @@ components:
           type: string
           example: ASsda233F2!
           description: The user's password
+    JwtRefreshRequest:
+      properties:
+        refreshToken:
+          type: string
+          example: "9fea96ad-57b3-4635-b5f2-06719e0af0a4"
+          description: The refresh token that will be refreshed
+    JwtResponse:
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTY3MTEzNTQ5NCwibGFzdE5hbWUiOiJTdXBlciBVc2VyIn0.arMRwjwFoIS5s_kNPc1EwA_p5niYSLXCZLCZ4hy5k70"
+          description: The JWT auth token that was refreshed
+        refreshToken:
+          type: string
+          example: "9fea96ad-57b3-4635-b5f2-06719e0af0a4"
+          description: The refresh token associated with the JWT token
   requestBodies:
     NewPatient:
       description: Patient object that will be added to the database
