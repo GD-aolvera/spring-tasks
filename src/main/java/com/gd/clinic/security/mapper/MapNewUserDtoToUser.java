@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface MapNewUserDtoToUser {
 
     MapNewUserDtoToUser INSTANCE = Mappers.getMapper(MapNewUserDtoToUser.class);
+
     @Mapping(target = "username", source = "username",
             defaultExpression = "java(java.util.UUID.randomUUID().toString())")
     User newUserToUser(NewUserDto user);
