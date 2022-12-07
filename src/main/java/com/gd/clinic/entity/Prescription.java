@@ -10,8 +10,6 @@ import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-@NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -25,22 +23,17 @@ public class Prescription {
     @Type(type = "pg-uuid")
     private UUID id;
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "patient_id")
-    @JsonIgnoreProperties("prescriptionList")
     private Patient patient;
 
-    @NonNull
     @Type(type = "uuid-char")
     @OneToOne
     @JoinColumn(name = "treatmentId")
     private Treatment treatment;
 
-    @NonNull
     private String timePattern;
 
-    @NonNull
     private Integer period;
 
     @OneToMany(fetch = FetchType.EAGER)

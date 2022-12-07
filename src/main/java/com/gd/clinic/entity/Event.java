@@ -9,8 +9,6 @@ import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -24,12 +22,10 @@ public class Event {
     @Type(type = "pg-uuid")
     private UUID id;
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "prescription_id")
     private Prescription prescription;
 
-    @NonNull
     private OffsetDateTime dateTime;
 
     @Enumerated(EnumType.STRING)

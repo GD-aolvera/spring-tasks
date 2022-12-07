@@ -8,8 +8,6 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.util.UUID;
 
-@NoArgsConstructor
-@RequiredArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -23,10 +21,8 @@ public class Treatment {
     @Type(type = "pg-uuid")
     private UUID id;
 
-    @NonNull
     private String name;
 
-    @NonNull
     @Enumerated(EnumType.STRING)
     @Column(name = "type", columnDefinition = "ENUM('PROCEDURE', 'MEDICINE')")
     private NewTreatmentDto.TypeEnum type;
