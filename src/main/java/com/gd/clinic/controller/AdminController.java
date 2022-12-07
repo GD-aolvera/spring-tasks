@@ -1,6 +1,7 @@
 package com.gd.clinic.controller;
 
 import com.gd.clinic.api.AdminApi;
+import com.gd.clinic.exception.EntityAlreadyExistException;
 import com.gd.clinic.model.*;
 import com.gd.clinic.security.service.RefreshTokenService;
 import com.gd.clinic.security.service.UserService;
@@ -19,7 +20,7 @@ public class AdminController implements AdminApi {
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UserResponseDto> createUser(NewUserDto newUserDto) {
+    public ResponseEntity<UserResponseDto> createUser(NewUserDto newUserDto) throws EntityAlreadyExistException {
         return ResponseEntity.ok(userService.createUser(newUserDto));
     }
 

@@ -446,6 +446,7 @@ paths:
     post:
       tags:
         - Admin
+        - Admin
       summary: Create new user
       description: ''
       operationId: createUser
@@ -495,7 +496,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JwtResponse'                
+                $ref: '#/components/schemas/JwtResponse'
 components:
   schemas:
     PatientResponse:
@@ -703,6 +704,17 @@ components:
             - admin
             - doctor
             - nurse
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: 404
+          description: the statuses indicate the issue, example 404 not found
+        message:
+          type: string
+          example: Object not found
+          description: error message
     UserResponse:
       properties:
         id:

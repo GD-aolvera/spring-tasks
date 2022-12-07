@@ -1,5 +1,6 @@
 package com.gd.clinic.config;
 
+import com.gd.clinic.exception.EntityNotFoundException;
 import com.gd.clinic.security.jwt.JWTAuthenticationFilter;
 import com.gd.clinic.security.jwt.JWTAuthorizationFilter;
 import com.gd.clinic.security.service.UserDetailServiceImpl;
@@ -37,7 +38,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception{
         JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(
                 appConfiguration.getAccessTokenSecret());
         jwtAuthenticationFilter.setAuthenticationManager(authManager);
@@ -68,7 +69,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
