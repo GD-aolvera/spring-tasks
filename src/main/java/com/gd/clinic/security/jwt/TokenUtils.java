@@ -7,7 +7,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

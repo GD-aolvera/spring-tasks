@@ -1,15 +1,13 @@
 package com.gd.clinic.security.service;
 
+import com.gd.clinic.exception.EntityAlreadyExistException;
 import com.gd.clinic.model.NewUserDto;
 import com.gd.clinic.model.UserResponseDto;
 import com.gd.clinic.security.entity.User;
 import com.gd.clinic.security.mapper.MapNewUserDtoToUser;
 import com.gd.clinic.security.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import javax.transaction.Transactional;
 import java.util.Optional;
 
@@ -34,9 +32,9 @@ public class UserService {
         return configUserResponse(user);
     }
 
-    public UserResponseDto createUser(NewUserDto newUserDto) throws ResponseStatusException {
+    public UserResponseDto createUser(NewUserDto newUserDto) throws EntityAlreadyExistException {
         if (existsByUsername(newUserDto.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists!");
+            throw new EntityAlreadyExistException("Username already exists!");
         }
         User user = configUser(newUserDto);
         user.setRole(UserResponseDto.RoleEnum.fromValue(user.getRole().toLowerCase()).name());
