@@ -2,6 +2,8 @@ buildscript {
 	ext {
 		openApiVersion = "1.6.12"
 		openApiGeneratorVersion = "6.2.1"
+		springVersion = "2.7.5"
+		jjwtVersion = "0.11.5"
 	}
 	repositories {
 		mavenLocal()
@@ -16,7 +18,7 @@ plugins {
 	id "java"
 }
 
-sourceSets.main.java.srcDirs = ['build/generated/src/main/java','src/main/java']
+sourceSets.main.java.srcDirs = ["build/generated/src/main/java","src/main/java"]
 
 group = "com.gd"
 version = "0.0.1-SNAPSHOT"
@@ -39,18 +41,26 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-web"
 	implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
 	implementation "org.openapitools:openapi-generator-gradle-plugin:${openApiGeneratorVersion}"
+	implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+	implementation "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+	implementation "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-security:${springVersion}"
+	implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springVersion}"
+	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 
+	annotationProcessor "org.projectlombok:lombok"
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
 	compileOnly "org.projectlombok:lombok"
 
-	annotationProcessor "org.projectlombok:lombok"
+	runtimeOnly "com.h2database:h2"
   
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
 configurations {
-    all*.exclude module : 'spring-boot-starter-logging'
-    all*.exclude module : 'logback-classic'
+    all*.exclude module : "spring-boot-starter-logging"
+    all*.exclude module : "logback-classic"
 }
 
 tasks.named("test") {
