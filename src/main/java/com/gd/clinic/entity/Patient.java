@@ -1,6 +1,7 @@
 package com.gd.clinic.entity;
 
 import com.gd.clinic.model.NewPatientDto;
+import com.gd.clinic.security.entity.User;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,9 +11,6 @@ import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.*;
 
-
-@RequiredArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -30,7 +28,7 @@ public class Patient {
     private String firstName;
 
     @NonNull
-    private  String lastName;
+    private String lastName;
 
     @NonNull
     private String diagnosis;
@@ -41,11 +39,9 @@ public class Patient {
     @NonNull
     private OffsetDateTime birthDate;
 
-    @Type(type = "pg-uuid")
-    //TODO: Uncomment when branch "security" is merged or vice versa to reference the user entity for the doctor id
-    //@OneToOne
-    //@JoinTable(name = "doctor_patients", joinColumns = @JoinColumn(name = "doctorId"), inverseJoinColumns = @JoinColumn(name = "patientId"))
-    private UUID doctorId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "doctorId")
+    private User doctorId;
 
     @OneToMany(fetch = FetchType.EAGER)
     @Transient

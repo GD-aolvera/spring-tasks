@@ -4,11 +4,11 @@ import com.gd.clinic.entity.Patient;
 import com.gd.clinic.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-// TODO: Uncomment once security has been merged to this branch or vice versa
-//import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,44 +19,32 @@ public class PatientService {
     private final PatientRepository patientRepository;
 
     public Patient getById(UUID id) throws RuntimeException {
-        Optional<Patient> fetchedPatient = patientRepository.findById(id);
-        if(fetchedPatient.isPresent()) {
-            return fetchedPatient.get();
-        } else {
-            throw  new RuntimeException("Patient not found");
-        }
+        return patientRepository.findById(id).orElseThrow(() -> new RuntimeException("Patient Not Found"));
     }
 
     public boolean existsByInsuranceNumber(String in) {
         return patientRepository.findOneByInsuranceNumber(in).isPresent();
     }
 
-    public Patient save(Patient patient) throws RuntimeException {
-        //TODO: Uncomment once branch "security" has been merged to this branch or vice versa
-        //patient.setCreatedBy(getCurrentUser());
+    public Patient save(Patient patient) {
+        patient.setCreatedBy(getCurrentUser());
         patient.setCreatedAt(OffsetDateTime.now());
-        patientRepository.save(patient);
-        Optional<Patient> savedPatient = patientRepository.findOneByInsuranceNumber(patient.getInsuranceNumber());
-        if (savedPatient.isPresent()){
-            return savedPatient.get();
-        } else {
-            throw new RuntimeException("Patient save instruction executed, patient not found while fetching");
-        }
+        return patientRepository.save(patient);
     }
 
-    public Patient getByIN(String in) throws  RuntimeException {
-        Optional<Patient> fetchedPatient = patientRepository.findOneByInsuranceNumber(in);
-        if(fetchedPatient.isPresent()) {
-            return fetchedPatient.get();
-        } else {
-            throw  new RuntimeException("Patient not found");
-        }
+    public Patient getByIN(String in) {
+        return patientRepository.findOneByInsuranceNumber(in).orElseThrow(() -> new RuntimeException("Patient Not Found"));
+    }
+    public List<Patient> getAll() {
+        return patientRepository.findAll();
     }
 
-    //TODO: Uncomment once branch "security" has been merged to this branch or vice versa
-   /*private String getCurrentUser() {
-        String principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        return principal.substring(principal.indexOf("userName=") + 9, principal.indexOf(", pass"));
-    }*/
+    private String getCurrentUser() {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        } else {
+            return null;
+        }
+    }
 
 }

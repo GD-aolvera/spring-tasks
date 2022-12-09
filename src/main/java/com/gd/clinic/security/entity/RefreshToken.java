@@ -2,6 +2,7 @@ package com.gd.clinic.security.entity;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -17,8 +18,9 @@ import java.util.UUID;
 public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Type(type = "uuid-char")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Type(type = "pg-uuid")
     private UUID id;
 
     @Column
@@ -43,4 +45,5 @@ public class RefreshToken {
     public int hashCode() {
         return getClass().hashCode();
     }
+
 }

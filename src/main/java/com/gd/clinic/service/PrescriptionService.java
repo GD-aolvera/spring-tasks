@@ -6,9 +6,9 @@ import com.gd.clinic.repository.PrescriptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Entity;
 import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -18,42 +18,21 @@ public class PrescriptionService {
 
     private final PrescriptionRepository prescriptionRepository;
 
-    public Prescription getById(UUID id) throws RuntimeException {
-        Optional<Prescription> fetchedPrescription =  prescriptionRepository.findById(id);
-        if(fetchedPrescription.isPresent()) {
-            return fetchedPrescription.get();
-        } else {
-            throw new RuntimeException("Prescription not found by ID");
-        }
+    public Prescription getById(UUID id) {
+        return prescriptionRepository.findById(id).orElseThrow(() -> new RuntimeException("Prescription not Found"));
     }
 
-    public Prescription getByPatientId(UUID id) throws RuntimeException {
-        Optional<Prescription> fetchedPrescription = prescriptionRepository.findOneByPatientId(id);
-        if(fetchedPrescription.isPresent()) {
-            return fetchedPrescription.get();
-        } else {
-            throw  new RuntimeException("Prescription not found by patient ID");
-        }
+    public Prescription getByPatientId(UUID id) {
+        return prescriptionRepository.findOneByPatientId(id).orElseThrow(() -> new RuntimeException("Prescription not Found"));
     }
 
-    public Prescription getByTreatment(Treatment t) throws RuntimeException {
-        Optional<Prescription> fetchedPrescription = prescriptionRepository.findOneByTreatment(t);
-        if(fetchedPrescription.isPresent()) {
-            return fetchedPrescription.get();
-        } else {
-            throw new RuntimeException("Prescription not found solely by treatment");
-        }
+    public Prescription getByTreatment(Treatment t) {
+        return prescriptionRepository.findOneByTreatment(t).orElseThrow(() -> new RuntimeException("Prescription not Found"));
     }
 
     public Prescription save (Prescription prescription) throws RuntimeException {
         prescription.setDatePrescribed(OffsetDateTime.now());
-        prescriptionRepository.save(prescription);
-        Optional<Prescription> savedPrescription = prescriptionRepository.findById(prescription.getId());
-        if(savedPrescription.isPresent()){
-            return savedPrescription.get();
-        } else {
-            throw new RuntimeException("Prescription saved instructions executed, prescription not found while fetching");
-        }
+        return prescriptionRepository.save(prescription);
     }
 
 }

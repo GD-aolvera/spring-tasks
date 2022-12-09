@@ -7,10 +7,13 @@ import com.gd.clinic.security.mapper.MapNewUserDtoToUser;
 import com.gd.clinic.security.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Service
@@ -30,6 +33,8 @@ public class UserService {
     }
 
     public UserResponseDto save(User user) {
+        user.setCreatedBy(getCurrentUser());
+        user.setCreatedAt(OffsetDateTime.now());
         userRepo.save(user);
         return configUserResponse(user);
     }
@@ -39,6 +44,7 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username already exists!");
         }
         User user = configUser(newUserDto);
+        user.setPassword(new BCryptPasswordEncoder().encode(newUserDto.getPassword()));
         user.setRole(UserResponseDto.RoleEnum.fromValue(user.getRole().toLowerCase()).name());
         return save(user);
     }
@@ -58,6 +64,14 @@ public class UserService {
         response.setCreatedAt(user.getCreatedAt());
         response.setCreatedBy(user.getCreatedBy());
         return response;
+    }
+
+    private String getCurrentUser() {
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        } else {
+            return null;
+        }
     }
 
 }

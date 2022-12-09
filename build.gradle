@@ -43,7 +43,7 @@ dependencies {
 	implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
 	implementation "org.openapitools:openapi-generator-gradle-plugin:${openApiGeneratorVersion}"
 	implementation "org.liquibase:liquibase-core"
-  implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 	implementation "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
 	implementation "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
 	implementation "org.springframework.boot:spring-boot-starter-security:${springVersion}"
@@ -61,7 +61,6 @@ dependencies {
 	testImplementation "org.testcontainers:junit-jupiter:1.17.6"
 	testImplementation "org.testcontainers:postgresql:1.17.6"
 	testImplementation "org.projectlombok:lombok"
-
 }
 
 configurations {

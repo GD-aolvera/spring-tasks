@@ -495,7 +495,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JwtResponse'                
+                $ref: '#/components/schemas/JwtResponse'
 components:
   schemas:
     PatientResponse:
@@ -578,15 +578,38 @@ components:
           type: string
           example: UUID
           description: The prescribed treatment's unique id in catalogue.
-        timePattern:
-          type: string
-          description: Frequency of treatment
-          example: Once a day
-        period:
+        frequency:
           type: integer
           format: int64
-          example: 5
-          description: Duration of the treatment in days
+          description: Frequency of treatment.
+          example: 3
+        frequencyUnit:
+          type: string
+          example: "week"
+          description: Treatment frequency is measured in this time unit.
+          enum:
+            - Day
+            - Week
+            - Month
+        daysOfTheWeek:
+          description: Days of the week in which events of this prescription re-occur.
+          type: array
+          items:
+            type: string
+            enum:
+              - Monday
+              - Tuesday
+              - Wednesday
+              - Thursday
+              - Friday
+              - Saturday
+              - Sunday
+          minItems: 1
+          maxItems: 7
+        description:
+          type: string
+          example: "At noon and midnight"
+          description: Further details of the prescription.
         status:
           type: string
           example: "active"
@@ -607,15 +630,38 @@ components:
           type: string
           example: 123e4567-e89b-12d3-a456-426614174233
           description: The prescribed treatment's unique id in catalogue.
-        timePattern:
-          type: string
-          description: Frequency of treatment
-          example: Once a day
-        period:
+        frequency:
           type: integer
           format: int64
-          example: 5
-          description: Duration of the treatment in days
+          description: Frequency of treatment.
+          example: 3
+        frequencyUnit:
+          type: string
+          example: "week"
+          description: Treatment frequency is measured in this time unit.
+          enum:
+            - Day
+            - Week
+            - Month
+        daysOfTheWeek:
+          description: Days of the week in which events of this prescription re-occur.
+          type: array
+          items:
+            type: string
+            enum:
+              - Monday
+              - Tuesday
+              - Wednesday
+              - Thursday
+              - Friday
+              - Saturday
+              - Sunday
+          minItems: 1
+          maxItems: 7
+        description:
+          type: string
+          example: "At noon and midnight"
+          description: Further details of the prescription.
         datePrescribed:
           type: string
           format: date-time

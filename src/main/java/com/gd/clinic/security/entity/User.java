@@ -3,6 +3,7 @@ package com.gd.clinic.security.entity;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedBy;
 import javax.persistence.*;
@@ -18,12 +19,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@Table(name = "users")
+@Table(name = "Users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Type(type = "uuid-char")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Type(type = "pg-uuid")
     private UUID id;
 
     @NonNull
@@ -59,4 +61,5 @@ public class User {
     public int hashCode() {
         return getClass().hashCode();
     }
+
 }
