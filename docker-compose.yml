@@ -1,9 +1,20 @@
 version: "3.7"
 
 services:
-  backend:
+  med-clinic-db:
+    image: gdaolvera8a/gd-medical-clinic
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=medical-clinic-db
+    ports:
+      - "5432:5432"
+  med-clinic-backend:
     container_name: medical-clinic
-    image: medical-clinic
+    image: medical-clinic-backend
     ports:
       - "8080:8080"
+    depends_on:
+      - "med-clinic-db"
     restart: unless-stopped
+

@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Scanner;
 import java.util.Set;
 
 @ActiveProfiles("test")
@@ -37,7 +37,6 @@ public class IntegrationTesting extends ContainersEnvironment {
     @Autowired
     private EventRepository eventRepository;
 
-
     @Test
     public void integralTest() throws InterruptedException {
         Set<Treatment> treatments = TEST_GEN.generateTreatments(7);
@@ -48,23 +47,19 @@ public class IntegrationTesting extends ContainersEnvironment {
         prescriptions.forEach(prescription -> prescriptionService.save(prescription));
         Set<Event> events = TEST_GEN.generateEvents(prescriptions);
         events.forEach(event -> eventRepository.save(event));
+        assertEquals(SAMPLE_SIZE, patientService.getAll().size());
         //TODO: Uncomment to check db, use info in console to connect. Need to fix scanner, wait for user input to continue. Little help here!
         //checkDBContinue();
+
+
     }
 
     private void checkDBContinue() throws InterruptedException {
-        System.out.println("Check Database, when ready to continue type 'y'");
+        System.out.println("Check Database, when ready cancel test");
         System.out.println(postgreSQLContainer.getJdbcUrl());
         System.out.println(postgreSQLContainer.getFirstMappedPort());
         System.out.println("usr: " + postgreSQLContainer.getUsername() + " " + "pass: " + postgreSQLContainer.getPassword());
-        Scanner scan = new Scanner(System.in);
-        synchronized (scan){
-            scan.wait();
-            String carryOn = scan.nextLine();
-            if(carryOn.equals("y")){
-                carryOn.notify();
-            }
-        }
+        Thread.sleep(300000);
     }
 
 }
