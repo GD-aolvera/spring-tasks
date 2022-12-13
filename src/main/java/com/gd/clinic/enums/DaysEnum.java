@@ -2,6 +2,7 @@ package com.gd.clinic.enums;
 
 //TODO: Implement enums from remaining entities/DTOs
 public enum DaysEnum {
+
     MONDAY("Monday"),
 
     TUESDAY("Tuesday"),
@@ -39,4 +40,5 @@ public enum DaysEnum {
         }
         throw new IllegalArgumentException("Unexpected value '" + value + "'");
     }
+
 }
