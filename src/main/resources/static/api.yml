@@ -495,7 +495,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JwtResponse'                
+                $ref: '#/components/schemas/JwtResponse'
 components:
   schemas:
     PatientResponse:
@@ -503,7 +503,8 @@ components:
       properties:
         id:
           type: string
-          example: UUID
+          format: uuid
+          example: UUID generated for this patient in the Patients table
         name:
           type: string
           description: Name of the patient
@@ -517,21 +518,39 @@ components:
           example: AO8323
         doctorId:
           type: string
-          description: UUID
+          format: uuid
+          description: Doctors table UUID corresponding to the patient's assigned doctor
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time of profile creation
+        createdBy:
+          type: string
+          example: user
+          description: User responsible for the creation of this patient
         status:
           type: string
           description: patient's treatment progress
           example: In treatment
           enum:
             - In treatment
-            - recovered
+            - Recovered
+            - Discharged
     NewPatient:
       type: object
       properties:
-        name:
+        firstName:
           type: string
-          description: Name of the patient
-          example: John Smith
+          description: first name of the patient
+          example: John
+        lastName:
+          type: string
+          description: last name of the patient
+          example: Smith
+        birthDate:
+          type: string
+          format: date-time
+          description: Date and time of patient's birth
         diagnosis:
           type: string
           description: Patient's diagnosis
@@ -541,15 +560,17 @@ components:
           example: "A0123331"
         doctorId:
           type: string
+          format: uuid
           example: UUID
-          description: doctor's id in doctor catalogue
+          description: Doctors table UUID corresponding to the patient's assigned doctor
         status:
           type: string
           description: patient's treatment progress
           example: In treatment
           enum:
             - In treatment
-            - recovered
+            - Recovered
+            - Discharged
     NewPrescription:
       type: object
       properties:
@@ -557,15 +578,44 @@ components:
           type: string
           example: UUID
           description: The prescribed treatment's unique id in catalogue.
-        timePattern:
-          type: string
-          description: Frequency of treatment
-          example: Once a day
-        period:
+        frequency:
           type: integer
           format: int64
-          example: 5
-          description: Duration of the treatment in days
+          description: Frequency of treatment.
+          example: 3
+        frequencyUnit:
+          type: string
+          example: "week"
+          description: Treatment frequency is measured in this time unit.
+          enum:
+            - Day
+            - Week
+            - Month
+        daysOfTheWeek:
+          description: Days of the week in which events of this prescription re-occur.
+          type: array
+          items:
+            type: string
+            enum:
+              - Monday
+              - Tuesday
+              - Wednesday
+              - Thursday
+              - Friday
+              - Saturday
+              - Sunday
+          minItems: 1
+          maxItems: 7
+        description:
+          type: string
+          example: "At noon and midnight"
+          description: Further details of the prescription.
+        status:
+          type: string
+          example: "active"
+          enum:
+            - Active
+            - Inactive
     PrescriptionResponse:
       type: object
       properties:
@@ -580,19 +630,48 @@ components:
           type: string
           example: 123e4567-e89b-12d3-a456-426614174233
           description: The prescribed treatment's unique id in catalogue.
-        timePattern:
-          type: string
-          description: Frequency of treatment
-          example: Once a day
-        period:
+        frequency:
           type: integer
           format: int64
-          example: 5
-          description: Duration of the treatment in days
+          description: Frequency of treatment.
+          example: 3
+        frequencyUnit:
+          type: string
+          example: "week"
+          description: Treatment frequency is measured in this time unit.
+          enum:
+            - Day
+            - Week
+            - Month
+        daysOfTheWeek:
+          description: Days of the week in which events of this prescription re-occur.
+          type: array
+          items:
+            type: string
+            enum:
+              - Monday
+              - Tuesday
+              - Wednesday
+              - Thursday
+              - Friday
+              - Saturday
+              - Sunday
+          minItems: 1
+          maxItems: 7
+        description:
+          type: string
+          example: "At noon and midnight"
+          description: Further details of the prescription.
         datePrescribed:
           type: string
           format: date-time
           description: Date and time of prescription
+        status:
+          type: string
+          example: "active"
+          enum:
+            - Active
+            - Inactive
     NewEvent:
       type: object
       properties:
@@ -611,6 +690,7 @@ components:
           enum:
             - Scheduled
             - Done
+            - Cancelled
     EventResponse:
       type: object
       properties:

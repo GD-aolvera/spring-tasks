@@ -1,26 +1,22 @@
-package com.gd.clinic.security.entity;
+package com.gd.clinic.entity;
 
+import com.gd.clinic.model.NewEventDto;
 import lombok.*;
-import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.CreatedBy;
+
 import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-
-@Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
-@NoArgsConstructor
-@Accessors(chain = true)
-@Table(name = "users")
-public class User {
+@Entity
+@Table(name = "events")
+public class Event {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -28,38 +24,28 @@ public class User {
     @Type(type = "pg-uuid")
     private UUID id;
 
-    @NonNull
-    private String firstName;
+    @ManyToOne
+    @JoinColumn(name = "prescription_id")
+    private Prescription prescription;
 
-    @NonNull
-    private String lastName;
+    private OffsetDateTime dateTime;
 
-    @NonNull
-    @Column(unique = true)
-    private String username;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "ENUM('SCHEDULED', 'DONE', 'Cancelled')")
+    private NewEventDto.StatusEnum status;
 
-    @NonNull
-    private String password;
-
-    @NonNull
-    private String role;
-
-    private OffsetDateTime createdAt;
-
-    @CreatedBy
-    private String createdBy;
+    private String cancelReason;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
+        Event event = (Event) o;
+        return id != null && Objects.equals(id, event.id);
     }
 
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

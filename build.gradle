@@ -3,6 +3,7 @@ buildscript {
 		openApiVersion = "1.6.12"
 		openApiGeneratorVersion = "6.2.1"
 		springVersion = "2.7.5"
+		postgresVersion = "42.5.0"
 		jjwtVersion = "0.11.5"
 	}
 	repositories {
@@ -25,7 +26,7 @@ version = "0.0.1-SNAPSHOT"
 sourceCompatibility = "17"
 
 apply plugin: "org.openapi.generator"
-apply from: "openApi.gradle"
+apply from: "openapi.gradle"
 
 configurations {
 	compileOnly {
@@ -41,21 +42,26 @@ dependencies {
 	implementation "org.springframework.boot:spring-boot-starter-web"
 	implementation "org.springdoc:springdoc-openapi-ui:${openApiVersion}"
 	implementation "org.openapitools:openapi-generator-gradle-plugin:${openApiGeneratorVersion}"
-	implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+	implementation "org.liquibase:liquibase-core"
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 	implementation "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
 	implementation "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
 	implementation "org.springframework.boot:spring-boot-starter-security:${springVersion}"
 	implementation "org.springframework.boot:spring-boot-starter-data-jpa:${springVersion}"
 	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
 
-	annotationProcessor "org.projectlombok:lombok"
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-
 	compileOnly "org.projectlombok:lombok"
 
-	runtimeOnly "com.h2database:h2"
+	runtimeOnly "org.postgresql:postgresql:${postgresVersion}"
+
+	annotationProcessor "org.projectlombok:lombok"
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
   
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	testImplementation "org.testcontainers:junit-jupiter:1.17.6"
+	testImplementation "org.testcontainers:postgresql:1.17.6"
+	testImplementation "org.projectlombok:lombok"
+	testImplementation 'junit:junit:4.13.2'
 }
 
 configurations {
@@ -66,3 +72,5 @@ configurations {
 tasks.named("test") {
 	useJUnitPlatform()
 }
+
+

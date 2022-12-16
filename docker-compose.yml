@@ -1,9 +1,29 @@
 version: "3.7"
-
 services:
-  backend:
-    container_name: medical-clinic
-    image: medical-clinic
+  med-clinic-db:
+    container_name: postgres-db
+    image: gdaolvera8a/gd-medical-clinic:pg-database
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=gd-medical-clinic
+    ports:
+      - "5432:5432"
+  med-clinic-backend:
+    container_name: spring-backend
+    image: gdaolvera8a/gd-medical-clinic:spring-backend
     ports:
       - "8080:8080"
+    depends_on:
+      - "med-clinic-db"
     restart: unless-stopped
+  med-clinic-db-admin:
+    container_name: database-management-pgadmin4
+    image: gdaolvera8a/gd-medical-clinic:pgadmin4-mgmt
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8082:80"
+    restart: always
+

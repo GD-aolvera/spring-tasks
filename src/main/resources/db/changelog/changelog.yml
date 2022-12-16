@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      runAlways: false
+      author: aolvera8a
+      changes:
+        - sqlFile:
+            path: sql/schema.sql
+            encoding: utf8
+            relativeToChangelogFile: true

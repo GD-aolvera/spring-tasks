@@ -1,26 +1,21 @@
-package com.gd.clinic.security.entity;
+package com.gd.clinic.entity;
 
+import com.gd.clinic.model.NewTreatmentDto;
 import lombok.*;
-import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.CreatedBy;
+
 import javax.persistence.*;
-import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-
-@Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
-@NoArgsConstructor
-@Accessors(chain = true)
-@Table(name = "users")
-public class User {
+@Entity
+@Table(name = "treatments")
+public class Treatment {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -28,33 +23,18 @@ public class User {
     @Type(type = "pg-uuid")
     private UUID id;
 
-    @NonNull
-    private String firstName;
+    private String name;
 
-    @NonNull
-    private String lastName;
-
-    @NonNull
-    @Column(unique = true)
-    private String username;
-
-    @NonNull
-    private String password;
-
-    @NonNull
-    private String role;
-
-    private OffsetDateTime createdAt;
-
-    @CreatedBy
-    private String createdBy;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", columnDefinition = "ENUM('PROCEDURE', 'MEDICINE')")
+    private NewTreatmentDto.TypeEnum type;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
+        Treatment treatment = (Treatment) o;
+        return id != null && Objects.equals(id, treatment.id);
     }
 
     @Override

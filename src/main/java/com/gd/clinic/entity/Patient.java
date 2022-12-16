@@ -1,26 +1,22 @@
-package com.gd.clinic.security.entity;
+package com.gd.clinic.entity;
 
+import com.gd.clinic.model.NewPatientDto;
+import com.gd.clinic.security.entity.User;
 import lombok.*;
-import lombok.experimental.Accessors;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.springframework.data.annotation.CreatedBy;
+
 import javax.persistence.*;
 import java.time.OffsetDateTime;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
-
-@Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
-@NoArgsConstructor
-@Accessors(chain = true)
-@Table(name = "users")
-public class User {
+@Entity
+@Table(name = "patients")
+public class Patient {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -35,26 +31,36 @@ public class User {
     private String lastName;
 
     @NonNull
-    @Column(unique = true)
-    private String username;
+    private String diagnosis;
 
     @NonNull
-    private String password;
+    private String insuranceNumber;
 
     @NonNull
-    private String role;
+    private OffsetDateTime birthDate;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "doctorId")
+    private User doctorId;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @Transient
+    private Set<Prescription> prescriptionList = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "ENUM('IN_TREATMENT', 'RECOVERED')")
+    private NewPatientDto.StatusEnum status;
 
     private OffsetDateTime createdAt;
 
-    @CreatedBy
     private String createdBy;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
+        Patient patient = (Patient) o;
+        return id != null && Objects.equals(id, patient.id);
     }
 
     @Override
