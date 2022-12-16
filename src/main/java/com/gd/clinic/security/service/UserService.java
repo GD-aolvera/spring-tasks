@@ -5,6 +5,7 @@ import com.gd.clinic.model.UserResponseDto;
 import com.gd.clinic.security.entity.User;
 import com.gd.clinic.security.mapper.MapNewUserDtoToUser;
 import com.gd.clinic.security.repository.UserRepo;
+import com.gd.clinic.security.util.AuthInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +34,7 @@ public class UserService {
     }
 
     public UserResponseDto save(User user) {
-        user.setCreatedBy(getCurrentUser());
+        user.setCreatedBy(AuthInfo.getCurrentUser());
         user.setCreatedAt(OffsetDateTime.now());
         userRepo.save(user);
         return configUserResponse(user);
@@ -64,14 +65,6 @@ public class UserService {
         response.setCreatedAt(user.getCreatedAt());
         response.setCreatedBy(user.getCreatedBy());
         return response;
-    }
-
-    private String getCurrentUser() {
-        if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        } else {
-            return null;
-        }
     }
 
 }

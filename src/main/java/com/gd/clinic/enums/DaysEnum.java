@@ -1,5 +1,7 @@
 package com.gd.clinic.enums;
 
+import java.util.Arrays;
+
 //TODO: Implement enums from remaining entities/DTOs
 public enum DaysEnum {
 
@@ -33,12 +35,11 @@ public enum DaysEnum {
     }
 
     public static DaysEnum fromValue(String value) {
-        for (DaysEnum b : DaysEnum.values()) {
-            if (b.value.equals(value)) {
-                return b;
-            }
-        }
-        throw new IllegalArgumentException("Unexpected value '" + value + "'");
+        return Arrays
+                .stream(DaysEnum.values())
+                .filter(daysEnum -> daysEnum.value.equals(value))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Value " + value + " not found in enum"));
     }
 
 }

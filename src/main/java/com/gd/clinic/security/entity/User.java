@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
 
     @Id

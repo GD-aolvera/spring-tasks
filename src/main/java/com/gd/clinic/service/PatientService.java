@@ -2,9 +2,9 @@ package com.gd.clinic.service;
 
 import com.gd.clinic.entity.Patient;
 import com.gd.clinic.repository.PatientRepository;
+import com.gd.clinic.security.util.AuthInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
@@ -27,24 +27,17 @@ public class PatientService {
     }
 
     public Patient save(Patient patient) {
-        patient.setCreatedBy(getCurrentUser());
+        patient.setCreatedBy(AuthInfo.getCurrentUser());
         patient.setCreatedAt(OffsetDateTime.now());
         return patientRepository.save(patient);
     }
 
-    public Patient getByIN(String in) {
+    public Patient getByInsuranceNumber(String in) {
         return patientRepository.findOneByInsuranceNumber(in).orElseThrow(() -> new RuntimeException("Patient Not Found"));
     }
+
     public List<Patient> getAll() {
         return patientRepository.findAll();
-    }
-
-    private String getCurrentUser() {
-        if (SecurityContextHolder.getContext().getAuthentication() != null) {
-            return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        } else {
-            return null;
-        }
     }
 
 }

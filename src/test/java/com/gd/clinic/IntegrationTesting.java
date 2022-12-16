@@ -50,8 +50,6 @@ public class IntegrationTesting extends ContainersEnvironment {
         assertEquals(SAMPLE_SIZE, patientService.getAll().size());
         //TODO: Uncomment to check db, use info in console to connect. Need to fix scanner, wait for user input to continue. Little help here!
         //checkDBContinue();
-
-
     }
 
     private void checkDBContinue() throws InterruptedException {
